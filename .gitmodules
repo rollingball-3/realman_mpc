@@ -1,0 +1,9 @@
+[submodule "pinocchio"]
+	path = pinocchio
+	url = https://github.com/zhengxiang94/pinocchio.git
+[submodule "hpp-fcl"]
+	path = hpp-fcl
+	url = https://github.com/zhengxiang94/hpp-fcl.git
+[submodule "grid_map"]
+	path = grid_map
+	url = https://github.com/ANYbotics/grid_map.git
