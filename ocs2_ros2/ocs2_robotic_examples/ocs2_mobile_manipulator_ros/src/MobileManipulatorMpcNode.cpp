@@ -56,6 +56,7 @@ int main(int argc, char** argv) {
   std::cerr << "Loading urdf file: " << urdfFile << std::endl;
   // Robot interface
   MobileManipulatorInterface interface(taskFile, libFolder, urdfFile);
+  // TODO set parameters
 
   // ROS ReferenceManager
   auto rosReferenceManagerPtr = std::make_shared<ocs2::RosReferenceManager>(
