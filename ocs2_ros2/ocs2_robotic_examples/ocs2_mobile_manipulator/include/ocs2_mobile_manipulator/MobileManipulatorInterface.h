@@ -80,6 +80,7 @@ class MobileManipulatorInterface final : public RobotInterface {
   const ManipulatorModelInfo& getManipulatorModelInfo() const { return manipulatorModelInfo_; }
 
  private:
+  // TODO add new costs function define under folder constraint and cost
   std::unique_ptr<StateInputCost> getQuadraticInputCost(const std::string& taskFile);
   std::unique_ptr<StateCost> getEndEffectorConstraint(const PinocchioInterface& pinocchioInterface, const std::string& taskFile,
                                                       const std::string& prefix, bool useCaching, const std::string& libraryFolder,
@@ -101,6 +102,8 @@ class MobileManipulatorInterface final : public RobotInterface {
   std::unique_ptr<PinocchioInterface> pinocchioInterfacePtr_;
   ManipulatorModelInfo manipulatorModelInfo_;
 
+  // TODO set activate paramter 
+  // TODO set control parmater
   vector_t initialState_;
 };
 

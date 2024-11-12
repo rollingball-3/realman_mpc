@@ -17,10 +17,6 @@ def generate_launch_description():
             default_value=''
         ),
         launch.actions.DeclareLaunchArgument(
-            name='urdfFile',
-            default_value=''
-        ),
-        launch.actions.DeclareLaunchArgument(
             name='libFolder',
             default_value=''
         ),
