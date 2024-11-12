@@ -23,7 +23,7 @@ ddp
 {
   algorithm                       SLQ
 
-  nThreads                        3
+  nThreads                        12
   threadPriority                  50
 
   maxNumIterations                1
@@ -69,7 +69,7 @@ rollout
   maxNumStepsPerSecond            100000
   checkNumericalStability         false
 }
-
+2
 ; MPC settings
 mpc
 {
@@ -79,58 +79,24 @@ mpc
   
   debugPrint                      false
 
-  mpcDesiredFrequency             100   ; [Hz]
-  mrtDesiredFrequency             400   ; [Hz]
+  mpcDesiredFrequency             50   ; [Hz]
+  mrtDesiredFrequency             50   ; [Hz]
 }
 
 ; initial state
 initialState
 {
-  ; initial state for the different types of arm base DOFs
-  base
-  {
-    defaultManipulator
-    {
-    }
-
-    floatingArmManipulator
-    {
-      (0,0)  0.0  ; position x
-      (1,0)  0.0  ; position y
-      (2,0)  0.5  ; position z
-      (3,0)  0.0  ; euler angle z
-      (4,0)  0.0  ; euler angle y
-      (5,0)  1.7  ; euler angle x
-    }
-
-    fullyActuatedFloatingArmManipulator
-    {
-      (0,0)  0.0  ; position x
-      (1,0)  0.0  ; position y
-      (2,0)  0.0  ; position z
-      (3,0)  0.0  ; euler angle z
-      (4,0)  0.0  ; euler angle y
-      (5,0)  0.0  ; euler angle x
-    }
-
-    wheelBasedMobileManipulator
-    {
-      (0,0)  0.0  ; position x
-      (1,0)  0.0  ; position y
-      (2,0)  0.0  ; heading
-    }
-  }
-
+  
   ; initial state for the arm DOFs
   arm
   {
-    (0,0)   0.0     ; arm_1
-    (1,0)   0.0     ; arm_2
-    (2,0)   0.0     ; arm_3
-    (3,0)   0.0     ; arm_4
-    (4,0)   0.0     ; arm_5
-    (5,0)   0.0     ; arm_6
-    (6,0)   0.0     ; arm_7
+    (0,0)   0.0     ; joint_1
+    (1,0)   0.0     ; joint_2
+    (2,0)   0.0     ; joint_3
+    (3,0)   0.0     ; joint_4
+    (4,0)   0.0     ; joint_5
+    (5,0)   0.0     ; joint_6
+    (6,0)   0.0     ; joint_7
   }
 }
 
@@ -139,48 +105,18 @@ inputCost
   ; control weight matrix
   R
   {
-    ; input costs for the different types of arm base DOFs
-    base
-    {
-      defaultManipulator
-      {
-      }
-
-      floatingArmManipulator
-      {
-      }
-
-      fullyActuatedFloatingArmManipulator
-      {
-        scaling 1e-2
-        (0,0)  5.0  ; position x
-        (1,1)  5.0  ; position y
-        (2,2)  5.0  ; position z
-        (3,3)  5.0  ; euler angle z
-        (4,4)  5.0  ; euler angle y
-        (5,5)  5.0  ; euler angle x
-      }
-
-      wheelBasedMobileManipulator
-      {
-        scaling 1e-2
-        (0,0)  5.0  ; forward velocity
-        (1,1)  5.0  ; turning velocity
-      }
-    }
-    
     ; input costs for the arm DOFs
     arm
     {
       scaling 1e-2
 
-      (0,0)  1.0  ; arm_1 velocity
-      (1,1)  1.0  ; arm_2 velocity
-      (2,2)  1.0  ; arm_3 velocity
-      (3,3)  1.0  ; arm_4 velocity
-      (4,4)  1.0  ; arm_5 velocity
-      (5,5)  1.0  ; arm_6 velocity
-      (6,6)  1.0  ; arm_7 velocity
+      (0,0)  1.0  ; joint_1 velocity
+      (1,1)  1.0  ; joint_2 velocity
+      (2,2)  1.0  ; joint_3 velocity
+      (3,3)  1.0  ; joint_4 velocity
+      (4,4)  1.0  ; joint_5 velocity
+      (5,5)  1.0  ; joint_6 velocity
+      (6,6)  1.0  ; joint_7 velocity
     }
   }
 }
@@ -211,7 +147,6 @@ selfCollision
   ; Self Collision pairs
   collisionLinkPairs
   {
-    [0] "panda_link1, panda_hand"
   }
 
   ; minimum distance allowed between the pairs
@@ -228,10 +163,10 @@ selfCollision
 jointPositionLimits
 {
   ; activate constraint
-  activate  false
+  activate  true
 
   ; relaxed log barrier mu
-  mu      1e-3
+  mu      5e-3
 
   ; relaxed log barrier delta
   delta   1e-4
@@ -240,94 +175,38 @@ jointPositionLimits
 jointVelocityLimits
 {
   ; relaxed log barrier mu
-  mu      0.01
+  mu      5e-6
 
   ; relaxed log barrier delta
-  delta   1e-3
+  delta   1e-4
   
   lowerBound
   {
-    ; velocity limits for the different types of arm base DOFs
-    base
-    {
-      defaultManipulator
-      {
-      }
-
-      floatingArmManipulator
-      {
-      }
-
-      fullyActuatedFloatingArmManipulator
-      {
-        (0,0)  -0.1  ; linear velocity x
-        (1,0)  -0.1  ; linear velocity y
-        (2,0)  -0.1  ; linear velocity z
-        (3,0)  -0.3  ; euler angle velocity z
-        (4,0)  -0.3  ; euler angle velocity y
-        (5,0)  -0.3  ; euler angle velocity x
-      }
-
-      wheelBasedMobileManipulator
-      {
-        (0,0)  -0.1 ; forward velocity
-        (1,0)  -0.3 ; turning velocity
-      }
-    }
-
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  -2.1750     ; arm_1 [rad/s]
-      (1,0)  -2.1750	   ; arm_2 [rad/s]
-      (2,0)  -2.1750	   ; arm_3 [rad/s]
-      (3,0)  -2.1750	   ; arm_4 [rad/s]
-      (4,0)  -2.6100	   ; arm_5 [rad/s]
-      (5,0)  -2.6100	   ; arm_6 [rad/s]
-      (6,0)  -2.6100	   ; arm_7 [rad/s]
+      (0,0)  -3.14     ; joint_1 [rad/s]
+      (1,0)  -3.14	   ; joint_2 [rad/s]
+      (2,0)  -3.14	   ; joint_3 [rad/s]
+      (3,0)  -3.14	   ; joint_4 [rad/s]
+      (4,0)  -3.14	   ; joint_5 [rad/s]
+      (5,0)  -3.14	   ; joint_6 [rad/s]
+      (6,0)  -3.14	   ; joint_7 [rad/s]
     }
   }
 
   upperBound
   {
-    ; velocity limits for the different types of arm base DOFs
-    base
-    {
-      defaultManipulator
-      {
-      }
-
-      floatingArmManipulator
-      {
-      }
-
-      fullyActuatedFloatingArmManipulator
-      {
-        (0,0)  0.1  ; linear velocity x
-        (1,0)  0.1  ; linear velocity y
-        (2,0)  0.1  ; linear velocity z
-        (3,0)  0.3  ; euler angle velocity z
-        (4,0)  0.3  ; euler angle velocity y
-        (5,0)  0.3  ; euler angle velocity x
-      }
-
-      wheelBasedMobileManipulator
-      {
-        (0,0)  0.1 ; forward velocity
-        (1,0)  0.3 ; turning velocity
-      }
-    }
-
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  2.1750    ; arm_1 [rad/s]
-      (1,0)  2.1750	   ; arm_2 [rad/s]
-      (2,0)  2.1750	   ; arm_3 [rad/s]
-      (3,0)  2.1750	   ; arm_4 [rad/s]
-      (4,0)  2.6100	   ; arm_5 [rad/s]
-      (5,0)  2.6100	   ; arm_6 [rad/s]
-      (6,0)  2.6100	   ; arm_7 [rad/s]
+      (0,0)  3.14    ; joint_1 [rad/s]
+      (1,0)  3.14	   ; joint_2 [rad/s]
+      (2,0)  3.14    ; joint_3 [rad/s]
+      (3,0)  3.14    ; joint_4 [rad/s]
+      (4,0)  3.14	   ; joint_5 [rad/s]
+      (5,0)  3.14	   ; joint_6 [rad/s]
+      (6,0)  3.14    ; joint_7 [rad/s]
     }
   }
 }

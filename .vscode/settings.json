@@ -1,0 +1,30 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/leiyufei/ros2_a4x/install/compliant_control/lib/python3.8/site-packages",
+        "/home/leiyufei/ros2_a4x/install/rm_ros_interfaces/lib/python3.8/site-packages",
+        "/home/leiyufei/ros2_a4x/install/pinocchio",
+        "/home/leiyufei/ros2_a4x/install/ocs2_msgs/lib/python3.8/site-packages",
+        "/home/leiyufei/ros2_a4x/install/image_sender/lib/python3.8/site-packages",
+        "/home/leiyufei/ros2_a4x/install/hpp-fcl",
+        "/home/leiyufei/ros2_a4x/install/grid_map_msgs/lib/python3.8/site-packages",
+        "/opt/ros/foxy/lib/python3.8/site-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/leiyufei/ros2_a4x/install/compliant_control/lib/python3.8/site-packages",
+        "/home/leiyufei/ros2_a4x/install/rm_ros_interfaces/lib/python3.8/site-packages",
+        "/home/leiyufei/ros2_a4x/install/pinocchio",
+        "/home/leiyufei/ros2_a4x/install/ocs2_msgs/lib/python3.8/site-packages",
+        "/home/leiyufei/ros2_a4x/install/image_sender/lib/python3.8/site-packages",
+        "/home/leiyufei/ros2_a4x/install/hpp-fcl",
+        "/home/leiyufei/ros2_a4x/install/grid_map_msgs/lib/python3.8/site-packages",
+        "/opt/ros/foxy/lib/python3.8/site-packages"
+    ],
+    "files.associations": {
+        ".eslintrc": "json",
+        "*.vue": "html",
+        "*.world": "xml",
+        "regex": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp"
+    }
+}

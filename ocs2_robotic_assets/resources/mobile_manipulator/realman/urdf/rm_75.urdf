@@ -104,6 +104,11 @@
       upper="3.1"
       effort="60"
       velocity="3.14" />
+    <!-- <limit
+      lower="-1.5"
+      upper="1.5"
+      effort="60"
+      velocity="3.14" /> -->
   </joint>
   <link
     name="Link2">
@@ -162,6 +167,11 @@
       upper="2.268"
       effort="60"
       velocity="3.14" />
+    <!-- <limit
+      lower="-0.5"
+      upper="0.5"
+      effort="60"
+      velocity="3.14" />  -->
   </joint>
   <link
     name="Link3">
@@ -373,7 +383,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link6.STL" />
+          filename="package://ocs2_robotic_assets/mobile_manipulator/realman/meshes/rm_75_6f_arm/Link6.STL" />
       </geometry>
     </collision> -->
   </link>
