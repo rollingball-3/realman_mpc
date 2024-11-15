@@ -18,7 +18,7 @@ def generate_launch_description():
         launch.actions.DeclareLaunchArgument(
             name='urdfFile',
             default_value=get_package_share_directory(
-                'ocs2_robotic_assets') + '/resources/mobile_manipulator/realman/urdf/rm_75.urdf'
+                'ocs2_robotic_assets') + '/resources/mobile_manipulator/realman/urdf/rm_75_6f.urdf'
         ),
         launch.actions.DeclareLaunchArgument(
             name='taskFile',

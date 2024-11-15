@@ -4,6 +4,7 @@ model_information {
   
   ; motion joints in the URDF to consider fixed
   removeJoints {
+    
   }
 
   ; base frame of the robot (from URDF)
@@ -211,7 +212,6 @@ selfCollision
   ; Self Collision pairs
   collisionLinkPairs
   {
-    [0] "panda_link1, panda_hand"
   }
 
   ; minimum distance allowed between the pairs
