@@ -5,6 +5,8 @@ project(ocs2_sphere_approximation)
 
 
 
+
+
 set(dependencies
   ocs2_core
   ocs2_robotic_tools
@@ -14,6 +16,7 @@ set(dependencies
   pinocchio
   urdf
 )
+
 
 find_package(ament_cmake REQUIRED)
 find_package(ocs2_core REQUIRED)
@@ -93,6 +96,8 @@ install(
   INCLUDES DESTINATION include/${PROJECT_NAME}
 )
 install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
+
+
 
 ############
 # Testing ##

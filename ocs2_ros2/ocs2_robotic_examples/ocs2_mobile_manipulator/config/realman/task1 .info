@@ -128,14 +128,14 @@ inputCost
 endEffector
 {
   ; end effector quadratic penalty scaling
-  muPosition      55.0
-  muOrientation   30.0
+  muPosition      50.0
+  muOrientation   25.0
 }
 
 finalEndEffector
 {
-  muPosition      55.0
-  muOrientation   30.0
+  muPosition      50.0
+  muOrientation   25.0
 }
 
 selfCollision
@@ -183,13 +183,13 @@ SphereApproximation
   ;maximum allowed distances between the surfaces of the collision primitives and collision spheres
   maxExcesses
   {
-    [0] 0.05
-    [1] 0.05
-    [2] 0.05
-    [3] 0.05
-    [4] 0.05
-    [5] 0.05
-    [6] 0.05
+    [0] 0.20
+    [1] 0.20
+    [2] 0.20
+    [3] 0.20
+    [4] 0.20
+    [5] 0.20
+    [6] 0.20
   }
 
   ; shrink ratio
@@ -214,7 +214,7 @@ jointPositionLimits
 jointVelocityLimits
 {
   ; relaxed log barrier mu
-  mu      1e-5
+  mu      5e-5
 
   ; relaxed log barrier delta
   delta   1e-4

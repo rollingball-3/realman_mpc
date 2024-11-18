@@ -48,7 +48,7 @@ def send_mpc_reset_request(arm_name):
 
     req = Reset.Request()
     req.reset = True
-    mpcstate = MpcState(value=[0.2, 0.0, 0.5, 0.0, 0.0, 0.0, 1.0])
+    mpcstate = MpcState(value=[0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0])
     mpcinput = MpcInput(value=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
     target_traj = MpcTargetTrajectories(time_trajectory=[0.0], state_trajectory=[mpcstate], input_trajectory = [mpcinput])
     req.target_trajectories = target_traj

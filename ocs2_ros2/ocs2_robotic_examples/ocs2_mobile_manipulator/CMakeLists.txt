@@ -3,15 +3,16 @@ set(CMAKE_CXX_STANDARD 17)
 project(ocs2_mobile_manipulator)
 
 
-
-
 set(dependencies
+  rclcpp
+  visualization_msgs
   ocs2_core
   ocs2_ddp
   ocs2_mpc
   ocs2_robotic_tools
   ocs2_robotic_assets
   ocs2_pinocchio_interface
+  ocs2_sphere_approximation
   ocs2_self_collision
   Boost
   pinocchio
@@ -19,12 +20,15 @@ set(dependencies
 )
 
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(visualization_msgs REQUIRED)
 find_package(ocs2_core REQUIRED)
 find_package(ocs2_ddp REQUIRED)
 find_package(ocs2_mpc REQUIRED)
 find_package(ocs2_robotic_tools REQUIRED)
 find_package(ocs2_robotic_assets REQUIRED)
 find_package(ocs2_self_collision REQUIRED)
+find_package(ocs2_sphere_approximation REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS
   system

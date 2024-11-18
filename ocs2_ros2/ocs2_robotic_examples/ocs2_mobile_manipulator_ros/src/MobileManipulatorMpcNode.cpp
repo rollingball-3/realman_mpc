@@ -31,6 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ocs2_mobile_manipulator/MobileManipulatorInterface.h>
 #include <ocs2_ros_interfaces/mpc/MPC_ROS_Interface.h>
 #include <ocs2_ros_interfaces/synchronized_module/RosReferenceManager.h>
+#include <rclcpp/executors/multi_threaded_executor.hpp>
+#include <thread>
 
 #include "rclcpp/rclcpp.hpp"
 
@@ -58,7 +60,6 @@ int main(int argc, char** argv) {
   MobileManipulatorInterface interface(taskFile, libFolder, urdfFile);
   // TODO set parameters
 
-  // interface.set();
   // ROS ReferenceManager
   auto rosReferenceManagerPtr = std::make_shared<ocs2::RosReferenceManager>(
       robotName, interface.getReferenceManagerPtr());
@@ -70,10 +71,43 @@ int main(int argc, char** argv) {
       interface.getOptimalControlProblem(), interface.getInitializer());
   mpc.getSolverPtr()->setReferenceManager(rosReferenceManagerPtr);
 
+  // Sphere approximation visualization
+  rclcpp::Node::SharedPtr node_sphere_visualization = rclcpp::Node::make_shared(
+      robotName + "sphere_visualization",
+      rclcpp::NodeOptions()
+          .allow_undeclared_parameters(true)
+          .automatically_declare_parameters_from_overrides(true));
+  
+  //Create a MarkerArray publisher worker
+  std::thread markerWorker([&interface,&node_sphere_visualization](){
+    // Create a MarkerArray publisherS
+    auto markerPublisher = node_sphere_visualization->create_publisher<visualization_msgs::msg::MarkerArray>(
+        "sphere_approximation", rclcpp::QoS(10));
+
+    // Create a timer to publish marker arrays at regular intervals
+    auto markerTimer = node_sphere_visualization->create_wall_timer(
+        std::chrono::milliseconds(20),
+        [&interface, &markerPublisher]() {
+          //RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Publishing sphere visualization");
+          interface.publishSphereVisualization(markerPublisher);
+        });
+
+    rclcpp::spin(node_sphere_visualization);
+  });
+
+  markerWorker.detach();
+
+
+
   // Launch MPC ROS node
   MPC_ROS_Interface mpcNode(mpc, robotName);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "---------Launching MPC ROS Interface-----------");
   mpcNode.launchNodes(node);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "---------Launched MPC ROS Interface-----------");
 
-  // Successful exit
+  markerWorker.join();
+
+  rclcpp::shutdown();
+
   return 0;
 }

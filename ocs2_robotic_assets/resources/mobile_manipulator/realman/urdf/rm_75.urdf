@@ -37,15 +37,18 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <!-- <collision>
+    <collision name="collision_base_link">
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/base_link.STL" />
+        <!-- <mesh
+          filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realman/meshes/base_link.STL" /> -->
+        <cylinder
+          length="0.0012"
+          radius="0.0006" />
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <link
     name="Link1">
@@ -77,15 +80,18 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <!-- <collision>
+    <collision name="collision_link1">
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link1.STL" />
+        <!-- <mesh
+          filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realman/meshes/Link1.STL" /> -->
+        <cylinder
+          length="0.10"
+          radius="0.06" />
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <joint
     name="joint1"
@@ -140,15 +146,18 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <!-- <collision>
+    <collision name='collision_link2'>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link2.STL" />
+        <!-- <mesh
+          filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realman/meshes/Link2.STL" /> -->
+        <cylinder
+          length="0.10"
+          radius="0.06" />
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <joint
     name="joint2"
@@ -203,15 +212,18 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <!-- <collision>
+    <collision name="collision_link3">
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link3.STL" />
+        <!-- <mesh
+          filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realman/meshes/Link3.STL" /> -->
+        <cylinder
+          length="0.10"
+          radius="0.06" />
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <joint
     name="joint3"
@@ -261,15 +273,18 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <!-- <collision>
+    <collision name='collision_link4'>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link4.STL" />
+        <!-- <mesh
+          filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realman/meshes/Link4.STL" /> -->
+        <cylinder
+          length="0.10"
+          radius="0.06" />
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <joint
     name="joint4"
@@ -319,15 +334,18 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <!-- <collision>
+    <collision name = "collision_link5">
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link5.STL" />
+        <!-- <mesh
+          filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realman/meshes/Link5.STL" /> -->
+        <cylinder
+          length="0.10"
+          radius="0.06" />
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <joint
     name="joint5"
@@ -377,15 +395,18 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <!-- <collision>colcon
+    <collision name = 'collision_link6'>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://ocs2_robotic_assets/mobile_manipulator/realman/meshes/rm_75_6f_arm/Link6.STL" />
+        <!-- <mesh
+          filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realman/meshes/Link6.STL" /> -->
+        <cylinder
+          length="0.10"
+          radius="0.06" />
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <joint
     name="joint6"
@@ -435,15 +456,18 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <!-- <collision>
+    <collision namee='collision_link7'>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link7.STL" />
+        <!-- <mesh
+          filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realman/meshes/Link7.STL" /> -->
+        <cylinder
+          length="0.10"
+          radius="0.06" />
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <joint
     name="joint7"

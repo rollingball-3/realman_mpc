@@ -46,8 +46,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ocs2_pinocchio_interface/PinocchioEndEffectorKinematics.h>
 #include <ocs2_pinocchio_interface/PinocchioEndEffectorKinematicsCppAd.h>
 #include <ocs2_pinocchio_interface/urdf.h>
+#include <ocs2_sphere_approximation/PinocchioSphereInterface.h>
 #include <ocs2_self_collision/SelfCollisionConstraint.h>
 #include <ocs2_self_collision/SelfCollisionConstraintCppAd.h>
+
+#include <rclcpp/rclcpp.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
+
 
 #include "ocs2_mobile_manipulator/ManipulatorModelInfo.h"
 #include "ocs2_mobile_manipulator/MobileManipulatorPreComputation.h"
@@ -118,6 +123,9 @@ MobileManipulatorInterface::MobileManipulatorInterface(const std::string& taskFi
   // create pinocchio interface
   pinocchioInterfacePtr_.reset(new PinocchioInterface(createPinocchioInterface(urdfFile, modelType, removeJointNames)));
   std::cerr << *pinocchioInterfacePtr_;
+
+  // create pinocchio sphere interface
+  pinocchioSphereInterfacePtr_.reset(new PinocchioSphereInterface(createPinocchioSphereInterface(*pinocchioInterfacePtr_, taskFile, "SphereApproximation")));
 
   // ManipulatorModelInfo
   manipulatorModelInfo_ = mobile_manipulator::createManipulatorModelInfo(*pinocchioInterfacePtr_, modelType, baseFrame, eeFrame);
@@ -434,6 +442,73 @@ std::unique_ptr<StateInputCost> MobileManipulatorInterface::getJointLimitSoftCon
   auto boxConstraints = std::make_unique<StateInputSoftBoxConstraint>(stateLimits, inputLimits);
   boxConstraints->initializeOffset(0.0, vector_t::Zero(manipulatorModelInfo_.stateDim), vector_t::Zero(manipulatorModelInfo_.inputDim));
   return boxConstraints;
+}
+
+// Initialize the PinocchioSphereInterface
+PinocchioSphereInterface MobileManipulatorInterface::createPinocchioSphereInterface(const PinocchioInterface& pinocchioInterface, const std::string& taskFile, const std::string& prefix) {
+  std::vector<std::string> collisionLinks;
+  std::vector<scalar_t> maxExcesses;
+  scalar_t shrinkRatio = 0.7;
+
+  boost::property_tree::ptree pt;
+  boost::property_tree::read_info(taskFile, pt);
+  std::cerr << "\n #### PinocchioSphereInterface Settings: ";
+  std::cerr << "\n #### =============================================================================\n";
+  loadData::loadStdVector<std::string>(taskFile, prefix +".collisionLinks", collisionLinks, true);
+  loadData::loadStdVector<scalar_t>(taskFile, prefix +".maxExcesses", maxExcesses, true);
+  loadData::loadPtreeValue(pt, shrinkRatio, prefix +".shrinkRatio", true);
+  std::cerr << " #### =============================================================================\n";
+
+  return PinocchioSphereInterface(pinocchioInterface, collisionLinks, maxExcesses, shrinkRatio);
+
+
+} 
+
+// Publish the sphere visualization
+void MobileManipulatorInterface::publishSphereVisualization(rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr publisher) {
+
+  // Get the sphere center and radius
+  const auto& sphereCenters = pinocchioSphereInterfacePtr_->computeSphereCentersInWorldFrame(*pinocchioInterfacePtr_);
+  printf("-----------sphereCenters size: %d\n", sphereCenters.size());
+  printf("------------------sphereCenters------\n",sphereCenters);
+
+  for (const auto& center : sphereCenters) {
+    std::cout << center.transpose() << std::endl;
+  }
+
+  const auto& sphereRadii = pinocchioSphereInterfacePtr_->getSphereRadii();
+
+  // Create the marker array
+  visualization_msgs::msg::MarkerArray markerArray;
+  for (size_t i = 0; i < sphereCenters.size(); ++i) {
+    visualization_msgs::msg::Marker marker;
+    //marker.header.frame_id = "world";
+    marker.header.frame_id = "Link"+std::to_string(i+1);
+    marker.header.stamp = rclcpp::Clock().now();
+    marker.ns = "sphere_approximation";
+    marker.id = i;
+    marker.type = visualization_msgs::msg::Marker::SPHERE;
+    marker.action = visualization_msgs::msg::Marker::ADD;
+
+    // Set the sphere position
+    marker.pose.position.x = sphereCenters[i](0);
+    marker.pose.position.y = sphereCenters[i](1);
+    marker.pose.position.z = sphereCenters[i](2);
+    marker.pose.orientation.x = 0.0;
+    marker.pose.orientation.y = 0.0;
+    marker.pose.orientation.z = 0.0;
+    marker.pose.orientation.w = 1.0;
+    marker.scale.x = 2.0 * sphereRadii[i];
+    marker.scale.y = 2.0 * sphereRadii[i];
+    marker.scale.z = 2.0 * sphereRadii[i];
+    marker.color.a = 0.3;
+    marker.color.r = 1.0;
+    marker.color.g = 0.0;
+    marker.color.b = 0.0;
+    markerArray.markers.push_back(marker);
+  }
+  // Publish the marker array
+  publisher->publish(markerArray);
 }
 
 }  // namespace mobile_manipulator
