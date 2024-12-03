@@ -4,14 +4,13 @@ model_information {
   
   ; motion joints in the URDF to consider fixed
   removeJoints {
-    [0] "panda_finger_joint1"
-    [1] "panda_finger_joint2"
+    
   }
 
   ; base frame of the robot (from URDF)
-  baseFrame                       "root"
+  baseFrame                       "world"
   ; end-effector frame of the robot (from URDF)
-  eeFrame                         "panda_hand_tcp"
+  eeFrame                         "realman_tip"
 }
 
 model_settings
@@ -25,7 +24,7 @@ ddp
 {
   algorithm                       SLQ
 
-  nThreads                        3
+  nThreads                        4
   threadPriority                  50
 
   maxNumIterations                1
@@ -76,13 +75,13 @@ rollout
 mpc
 {
   timeHorizon                     1.0   ; [s]
-  solutionTimeWindow              1.0   ; [s]
+  solutionTimeWindow              0.2   ; [s]
   coldStart                       false
   
   debugPrint                      true
 
   mpcDesiredFrequency             100   ; [Hz]
-  mrtDesiredFrequency             400   ; [Hz]
+  mrtDesiredFrequency             100   ; [Hz]
 }
 
 ; initial state
@@ -126,13 +125,13 @@ initialState
   ; initial state for the arm DOFs
   arm
   {
-    (0,0)   0.0       ; arm_1
-    (1,0)   0.171     ; arm_2
-    (2,0)   0.114     ; arm_3
-    (3,0)  -1.570     ; arm_4
-    (4,0)   0.050     ; arm_5
-    (5,0)   1.570     ; arm_6
-    (6,0)   0.469     ; arm_7
+    (0,0)   0.0     ; arm_1
+    (1,0)   0.0     ; arm_2
+    (2,0)   0.0     ; arm_3
+    (3,0)   0.0     ; arm_4
+    (4,0)   0.0     ; arm_5
+    (5,0)   0.0     ; arm_6
+    (6,0)   0.0     ; arm_7
   }
 }
 
@@ -176,13 +175,13 @@ inputCost
     {
       scaling 1e-2
 
-      (0,0)  1.0  ; arm_1 velocity
-      (1,1)  1.0  ; arm_2 velocity
-      (2,2)  1.0  ; arm_3 velocity
-      (3,3)  1.0  ; arm_4 velocity
-      (4,4)  1.0  ; arm_5 velocity
-      (5,5)  1.0  ; arm_6 velocity
-      (6,6)  1.0  ; arm_7 velocity
+      (0,0)  100.0  ; arm_1 velocity
+      (1,1)  100.0  ; arm_2 velocity
+      (2,2)  100.0  ; arm_3 velocity
+      (3,3)  100.0  ; arm_4 velocity
+      (4,4)  100.0  ; arm_5 velocity
+      (5,5)  100.0  ; arm_6 velocity
+      (6,6)  100.0  ; arm_7 velocity
     }
   }
 }
@@ -203,7 +202,7 @@ finalEndEffector
 selfCollision
 { 
   ; activate self-collision constraint
-  activate  true
+  activate  false
 
   ; Self Collision raw object pairs
   collisionObjectPairs
@@ -213,7 +212,6 @@ selfCollision
   ; Self Collision pairs
   collisionLinkPairs
   {
-    [0] "panda_link1, panda_hand"
   }
 
   ; minimum distance allowed between the pairs
@@ -230,22 +228,22 @@ selfCollision
 jointPositionLimits
 {
   ; activate constraint
-  activate  false
+  activate  true
 
   ; relaxed log barrier mu
-  mu      1e-3
+  mu      1e-2
 
   ; relaxed log barrier delta
-  delta   1e-4
+  delta   1e-3
 }
 
 jointVelocityLimits
 {
   ; relaxed log barrier mu
-  mu      0.01
+  mu      1e-10
 
   ; relaxed log barrier delta
-  delta   1e-3
+  delta   1e-10
   
   lowerBound
   {

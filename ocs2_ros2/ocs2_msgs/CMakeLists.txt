@@ -19,7 +19,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Multiplier.msg"
   "msg/Constraint.msg"
   "srv/Reset.srv"
-  DEPENDENCIES std_msgs geometry_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
+  "srv/GenerateTraj.srv"
+  DEPENDENCIES std_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 
 ament_package()

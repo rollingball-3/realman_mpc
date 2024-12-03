@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'gazebo_mpc_interface'
+package_name = 'realman_mpc_interface'
 
 setup(
     name=package_name,
@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'gazebo_mpc_interface = gazebo_mpc_interface.gazebo_mpc_interface:main',
+            'gazebo_mpc_interface = realman_mpc_interface.gazebo_mpc_interface:main',
         ],
     },
 )

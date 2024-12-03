@@ -49,6 +49,7 @@
           radius="0.0006" />
       </geometry>
     </collision>
+    </collision>
   </link>
   <link
     name="Link1">
@@ -91,6 +92,7 @@
           length="0.10"
           radius="0.06" />
       </geometry>
+    </collision>
     </collision>
   </link>
   <joint
@@ -158,6 +160,7 @@
           radius="0.06" />
       </geometry>
     </collision>
+    </collision>
   </link>
   <joint
     name="joint2"
@@ -224,6 +227,7 @@
           radius="0.06" />
       </geometry>
     </collision>
+    </collision>
   </link>
   <joint
     name="joint3"
@@ -284,6 +288,7 @@
           length="0.10"
           radius="0.06" />
       </geometry>
+    </collision>
     </collision>
   </link>
   <joint
@@ -346,6 +351,7 @@
           radius="0.06" />
       </geometry>
     </collision>
+    </collision>
   </link>
   <joint
     name="joint5"
@@ -407,6 +413,7 @@
           radius="0.06" />
       </geometry>
     </collision>
+    </collision>
   </link>
   <joint
     name="joint6"
@@ -467,6 +474,7 @@
           length="0.10"
           radius="0.06" />
       </geometry>
+    </collision>
     </collision>
   </link>
   <joint

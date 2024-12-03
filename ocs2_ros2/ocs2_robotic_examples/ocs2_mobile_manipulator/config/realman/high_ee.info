@@ -4,14 +4,13 @@ model_information {
   
   ; motion joints in the URDF to consider fixed
   removeJoints {
-    [0] "panda_finger_joint1"
-    [1] "panda_finger_joint2"
+    
   }
 
   ; base frame of the robot (from URDF)
-  baseFrame                       "root"
+  baseFrame                       "world"
   ; end-effector frame of the robot (from URDF)
-  eeFrame                         "panda_hand_tcp"
+  eeFrame                         "realman_tip"
 }
 
 model_settings
@@ -76,10 +75,10 @@ rollout
 mpc
 {
   timeHorizon                     1.0   ; [s]
-  solutionTimeWindow              1.0   ; [s]
+  solutionTimeWindow              0.2   ; [s]
   coldStart                       false
   
-  debugPrint                      true
+  debugPrint                      false
 
   mpcDesiredFrequency             100   ; [Hz]
   mrtDesiredFrequency             400   ; [Hz]
@@ -126,13 +125,13 @@ initialState
   ; initial state for the arm DOFs
   arm
   {
-    (0,0)   0.0       ; arm_1
-    (1,0)   0.171     ; arm_2
-    (2,0)   0.114     ; arm_3
-    (3,0)  -1.570     ; arm_4
-    (4,0)   0.050     ; arm_5
-    (5,0)   1.570     ; arm_6
-    (6,0)   0.469     ; arm_7
+    (0,0)   0.0     ; arm_1
+    (1,0)   0.0     ; arm_2
+    (2,0)   0.0     ; arm_3
+    (3,0)   0.0     ; arm_4
+    (4,0)   0.0     ; arm_5
+    (5,0)   0.0     ; arm_6
+    (6,0)   0.0     ; arm_7
   }
 }
 
@@ -176,13 +175,13 @@ inputCost
     {
       scaling 1e-2
 
-      (0,0)  1.0  ; arm_1 velocity
-      (1,1)  1.0  ; arm_2 velocity
-      (2,2)  1.0  ; arm_3 velocity
-      (3,3)  1.0  ; arm_4 velocity
-      (4,4)  1.0  ; arm_5 velocity
-      (5,5)  1.0  ; arm_6 velocity
-      (6,6)  1.0  ; arm_7 velocity
+      (0,0)  100.0  ; arm_1 velocity
+      (1,1)  100.0  ; arm_2 velocity
+      (2,2)  100.0  ; arm_3 velocity
+      (3,3)  100.0  ; arm_4 velocity
+      (4,4)  100.0  ; arm_5 velocity
+      (5,5)  100.0  ; arm_6 velocity
+      (6,6)  100.0  ; arm_7 velocity
     }
   }
 }
@@ -190,14 +189,14 @@ inputCost
 endEffector
 {
   ; end effector quadratic penalty scaling
-  muPosition      50.0
-  muOrientation   25.0
+  muPosition      500.0
+  muOrientation   250.0
 }
 
 finalEndEffector
 {
-  muPosition      50.0
-  muOrientation   25.0
+  muPosition      500.0
+  muOrientation   250.0
 }
 
 selfCollision
@@ -213,7 +212,6 @@ selfCollision
   ; Self Collision pairs
   collisionLinkPairs
   {
-    [0] "panda_link1, panda_hand"
   }
 
   ; minimum distance allowed between the pairs
