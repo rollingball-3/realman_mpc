@@ -1,0 +1,5 @@
+float64[] goal_pose
+float64 time
+float64 timestep
+---
+bool done

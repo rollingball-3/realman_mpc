@@ -81,7 +81,7 @@ mpc
   debugPrint                      true
 
   mpcDesiredFrequency             100   ; [Hz]
-  mrtDesiredFrequency             400   ; [Hz]
+  mrtDesiredFrequency             100   ; [Hz]
 }
 
 ; initial state
@@ -175,13 +175,13 @@ inputCost
     {
       scaling 1e-2
 
-      (0,0)  1.0  ; arm_1 velocity
-      (1,1)  1.0  ; arm_2 velocity
-      (2,2)  1.0  ; arm_3 velocity
-      (3,3)  1.0  ; arm_4 velocity
-      (4,4)  1.0  ; arm_5 velocity
-      (5,5)  1.0  ; arm_6 velocity
-      (6,6)  1.0  ; arm_7 velocity
+      (0,0)  100.0  ; arm_1 velocity
+      (1,1)  100.0  ; arm_2 velocity
+      (2,2)  100.0  ; arm_3 velocity
+      (3,3)  100.0  ; arm_4 velocity
+      (4,4)  100.0  ; arm_5 velocity
+      (5,5)  100.0  ; arm_6 velocity
+      (6,6)  100.0  ; arm_7 velocity
     }
   }
 }
@@ -202,7 +202,7 @@ finalEndEffector
 selfCollision
 { 
   ; activate self-collision constraint
-  activate  true
+  activate  false
 
   ; Self Collision raw object pairs
   collisionObjectPairs
@@ -240,7 +240,7 @@ jointPositionLimits
 jointVelocityLimits
 {
   ; relaxed log barrier mu
-  mu      0.01
+  mu      1e-2
 
   ; relaxed log barrier delta
   delta   1e-3
@@ -278,13 +278,13 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  -2.1750     ; arm_1 [rad/s]
-      (1,0)  -2.1750	   ; arm_2 [rad/s]
-      (2,0)  -2.1750	   ; arm_3 [rad/s]
-      (3,0)  -2.1750	   ; arm_4 [rad/s]
-      (4,0)  -2.6100	   ; arm_5 [rad/s]
-      (5,0)  -2.6100	   ; arm_6 [rad/s]
-      (6,0)  -2.6100	   ; arm_7 [rad/s]
+      (0,0)  -0.5     ; joint_1 [rad/s]
+      (1,0)  -0.5	   ; joint_2 [rad/s]
+      (2,0)  -0.5	   ; joint_3 [rad/s]
+      (3,0)  -0.5	   ; joint_4 [rad/s]
+      (4,0)  -0.5	   ; joint_5 [rad/s]
+      (5,0)  -0.5	   ; joint_6 [rad/s]
+      (6,0)  -0.5	   ; joint_7 [rad/s]
     }
   }
 
@@ -321,13 +321,13 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-      (0,0)  2.1750    ; arm_1 [rad/s]
-      (1,0)  2.1750	   ; arm_2 [rad/s]
-      (2,0)  2.1750	   ; arm_3 [rad/s]
-      (3,0)  2.1750	   ; arm_4 [rad/s]
-      (4,0)  2.6100	   ; arm_5 [rad/s]
-      (5,0)  2.6100	   ; arm_6 [rad/s]
-      (6,0)  2.6100	   ; arm_7 [rad/s]
+      (0,0)  0.5    ; joint_1 [rad/s]
+      (1,0)  0.5	   ; joint_2 [rad/s]
+      (2,0)  0.5    ; joint_3 [rad/s]
+      (3,0)  0.5    ; joint_4 [rad/s]
+      (4,0)  0.5	   ; joint_5 [rad/s]
+      (5,0)  0.5	   ; joint_6 [rad/s]
+      (6,0)  0.5    ; joint_7 [rad/s]
     }
   }
 }

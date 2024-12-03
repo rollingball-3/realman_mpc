@@ -158,8 +158,8 @@
     <axis
       xyz="0 1 0" />
     <limit
-      lower="-2.268"
-      upper="2.268"
+      lower="-0.268"
+      upper="0.268"
       effort="60"
       velocity="3.14" />
   </joint>

@@ -23,7 +23,7 @@ def generate_launch_description():
         launch.actions.DeclareLaunchArgument(
             name='taskFile',
             default_value=get_package_share_directory(
-                'ocs2_mobile_manipulator') + '/config/realman/task.info'
+                'ocs2_mobile_manipulator') + '/config/realman/base.info'
         ),
         launch.actions.DeclareLaunchArgument(
             name='libFolder',
