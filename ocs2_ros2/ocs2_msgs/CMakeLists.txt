@@ -3,6 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 project(ocs2_msgs)
 
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
@@ -18,7 +19,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Multiplier.msg"
   "msg/Constraint.msg"
   "srv/Reset.srv"
-  DEPENDENCIES std_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
+  DEPENDENCIES std_msgs geometry_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 
 ament_package()

@@ -56,8 +56,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ocs2_mobile_manipulator/ManipulatorModelInfo.h"
 #include "ocs2_mobile_manipulator/MobileManipulatorPreComputation.h"
+#include "ocs2_mobile_manipulator/EsdfClientInterface.h"
 #include "ocs2_mobile_manipulator/constraint/EndEffectorConstraint.h"
 #include "ocs2_mobile_manipulator/constraint/MobileManipulatorSelfCollisionConstraint.h"
+#include "ocs2_mobile_manipulator/constraint/ObstacleAvoidanceConstraint.h"
 #include "ocs2_mobile_manipulator/cost/QuadraticInputCost.h"
 #include "ocs2_mobile_manipulator/dynamics/DefaultManipulatorDynamics.h"
 #include "ocs2_mobile_manipulator/dynamics/FloatingArmManipulatorDynamics.h"
@@ -127,6 +129,8 @@ MobileManipulatorInterface::MobileManipulatorInterface(const std::string& taskFi
   // create pinocchio sphere interface
   pinocchioSphereInterfacePtr_.reset(new PinocchioSphereInterface(createPinocchioSphereInterface(*pinocchioInterfacePtr_, taskFile, "SphereApproximation")));
 
+  // create esdf client interface
+  esdfClientInterfacePtr_.reset(new EsdfClientInterface("esdf_client", "/nvblox_node/get_esdf_and_gradient"));
   // ManipulatorModelInfo
   manipulatorModelInfo_ = mobile_manipulator::createManipulatorModelInfo(*pinocchioInterfacePtr_, modelType, baseFrame, eeFrame);
 
@@ -178,6 +182,7 @@ MobileManipulatorInterface::MobileManipulatorInterface(const std::string& taskFi
                                                                                usePreComputation, libraryFolder, recompileLibraries));
   problem_.finalSoftConstraintPtr->add("finalEndEffector", getEndEffectorConstraint(*pinocchioInterfacePtr_, taskFile, "finalEndEffector",
                                                                                     usePreComputation, libraryFolder, recompileLibraries));
+  
   // self-collision avoidance constraint
   bool activateSelfCollision = true;
   loadData::loadPtreeValue(pt, activateSelfCollision, "selfCollision.activate", true);
@@ -187,6 +192,14 @@ MobileManipulatorInterface::MobileManipulatorInterface(const std::string& taskFi
                                                     libraryFolder, recompileLibraries));
   }
 
+  // obstacle avoidance constraint
+  bool activateObstacleAvoidance = true;
+  loadData::loadPtreeValue(pt, activateObstacleAvoidance, "obstacleAvoidance.activate", true);
+  if (activateObstacleAvoidance) {
+    problem_.stateSoftConstraintPtr->add("obstacleAvoidance", getObstacleAvoidanceConstraint(*pinocchioSphereInterfacePtr_, *esdfClientInterfacePtr_, taskFile, "obstacleAvoidance",
+                                                                                        usePreComputation, libraryFolder, recompileLibraries));
+  }
+  
   // Dynamics
   switch (manipulatorModelInfo_.manipulatorModelType) {
     case ManipulatorModelType::DefaultManipulator: {
@@ -344,6 +357,37 @@ std::unique_ptr<StateCost> MobileManipulatorInterface::getSelfCollisionConstrain
   return std::make_unique<StateSoftConstraint>(std::move(constraint), std::move(penalty));
 }
 
+std::unique_ptr<StateCost> MobileManipulatorInterface::getObstacleAvoidanceConstraint(const PinocchioSphereInterface& pinocchioSphereInterface,
+                                                                                      EsdfClientInterface& esdfClientInterface, const std::string& taskFile,
+                                                                                      const std::string& prefix, bool usePreComputation, const std::string& libraryFolder,
+                                                                                      bool recompileLibraries){
+  boost::property_tree::ptree pt;
+  boost::property_tree::read_info(taskFile, pt);
+
+  scalar_t mu = 1e-2;
+  scalar_t delta = 1e-3;
+  scalar_t weight = 1.0;
+
+  std::cerr << "\n #### ObstacleAvoidance Settings: ";
+  std::cerr << "\n #### =============================================================================\n";
+  loadData::loadPtreeValue(pt, mu, prefix + ".mu", true);
+  loadData::loadPtreeValue(pt, delta, prefix + ".delta", true);
+  loadData::loadPtreeValue(pt, weight, prefix + ".weight", true);
+  std::cerr << " #### =============================================================================\n";
+
+  std::unique_ptr<StateConstraint> constraint;
+  if (usePreComputation){
+    constraint = std::make_unique<ObstacleAvoidanceConstraint>(MobileManipulatorPinocchioMapping(manipulatorModelInfo_), pinocchioSphereInterface, esdfClientInterface);
+    //constraint.reset(new ObstacleAvoidanceConstraint(MobileManipulatorPinocchioMapping(manipulatorModelInfo_), pinocchioSphereInterface, esdfClientInterface));
+  } else {
+    //constraint = std::make_unique<ObstacleAvoidanceConstraintCppAd>(pinocchioInterface, pinocchioSphereInterface, esdfClientInterface, weight, "obstacleAvoidance", libraryFolder, recompileLibraries, false);
+  }
+
+  auto penalty = std::make_unique<RelaxedBarrierPenalty>(RelaxedBarrierPenalty::Config{mu, delta});
+  return std::make_unique<StateSoftConstraint>(std::move(constraint), std::move(penalty));
+
+  }
+
 /******************************************************************************************************/
 /******************************************************************************************************/
 /******************************************************************************************************/
@@ -468,13 +512,14 @@ PinocchioSphereInterface MobileManipulatorInterface::createPinocchioSphereInterf
 void MobileManipulatorInterface::publishSphereVisualization(rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr publisher) {
 
   // Get the sphere center and radius
+  //pinocchioSphereInterfacePtr_.reset(new PinocchioSphereInterface(createPinocchioSphereInterface(*pinocchioInterfacePtr_, taskFile, "SphereApproximation")));
   const auto& sphereCenters = pinocchioSphereInterfacePtr_->computeSphereCentersInWorldFrame(*pinocchioInterfacePtr_);
-  printf("-----------sphereCenters size: %d\n", sphereCenters.size());
-  printf("------------------sphereCenters------\n",sphereCenters);
+  // printf("-----------sphereCenters size: %d\n", sphereCenters.size());
+  // printf("------------------sphereCenters------\n",sphereCenters);
 
-  for (const auto& center : sphereCenters) {
-    std::cout << center.transpose() << std::endl;
-  }
+  // for (const auto& center : sphereCenters) {
+  //   std::cout << center.transpose() << std::endl;
+  // }
 
   const auto& sphereRadii = pinocchioSphereInterfacePtr_->getSphereRadii();
 
@@ -489,7 +534,7 @@ void MobileManipulatorInterface::publishSphereVisualization(rclcpp::Publisher<vi
     marker.id = i;
     marker.type = visualization_msgs::msg::Marker::SPHERE;
     marker.action = visualization_msgs::msg::Marker::ADD;
-
+    
     // Set the sphere position
     marker.pose.position.x = sphereCenters[i](0);
     marker.pose.position.y = sphereCenters[i](1);
@@ -501,7 +546,7 @@ void MobileManipulatorInterface::publishSphereVisualization(rclcpp::Publisher<vi
     marker.scale.x = 2.0 * sphereRadii[i];
     marker.scale.y = 2.0 * sphereRadii[i];
     marker.scale.z = 2.0 * sphereRadii[i];
-    marker.color.a = 0.3;
+    marker.color.a = 0.4;
     marker.color.r = 1.0;
     marker.color.g = 0.0;
     marker.color.b = 0.0;

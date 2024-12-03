@@ -25,6 +25,10 @@
   <depend>ocs2_sphere_approximation</depend>
   <depend>ocs2_self_collision</depend>
   <depend>pinocchio</depend>
+  <depend>nvblox_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+
 
   <test_depend>ament_cmake_gtest</test_depend>
 

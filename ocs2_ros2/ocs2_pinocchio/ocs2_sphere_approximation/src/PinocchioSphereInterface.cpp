@@ -47,11 +47,11 @@ PinocchioSphereInterface::PinocchioSphereInterface(const PinocchioInterface& pin
     : geometryModelPtr_(new pinocchio::GeometryModel), pinocchioInterface_(pinocchioInterface),collisionLinks_(std::move(collisionLinks)) {
   buildGeomFromPinocchioInterface(pinocchioInterface, *geometryModelPtr_);
 
-  printf("-----------collisionLinks size: %d\n", collisionLinks_.size());
-  printf("-----------maxExcesses size: %d\n", maxExcesses.size());
-  printf("-----------shrinkRatio: %f\n", shrinkRatio);
+  // printf("-----------collisionLinks size: %d\n", collisionLinks_.size());
+  // printf("-----------maxExcesses size: %d\n", maxExcesses.size());
+  // printf("-----------shrinkRatio: %f\n", shrinkRatio);
 
-  printf("-----------geometryObjects: %d\n", geometryModelPtr_->geometryObjects.size());
+  // printf("-----------geometryObjects: %d\n", geometryModelPtr_->geometryObjects.size());
 
 
   for (size_t i = 0; i < collisionLinks_.size(); i++) {
@@ -68,7 +68,7 @@ PinocchioSphereInterface::PinocchioSphereInterface(const PinocchioInterface& pin
 
   numPrimitiveShapes_ = sphereApproximations_.size();
 
-  printf("-----------numPrimitiveShapes_: %d\n", numPrimitiveShapes_);
+  //printf("-----------numPrimitiveShapes_: %d\n", numPrimitiveShapes_);
 
 
   numSpheres_.reserve(numPrimitiveShapes_);
@@ -90,10 +90,10 @@ PinocchioSphereInterface::PinocchioSphereInterface(const PinocchioInterface& pin
     }
   }
 
-  std::cout << "geomObjIds_:" << std::endl;
-  for (const auto& id : geomObjIds_) {
-    std::cout << id << std::endl;
-  }
+  // std::cout << "geomObjIds_:" << std::endl;
+  // for (const auto& id : geomObjIds_) {
+  //   std::cout << id << std::endl;
+  // }
   
 }
 
@@ -150,21 +150,19 @@ auto PinocchioSphereInterface::computeSphereCentersInWorldFrame(const PinocchioI
     -> std::vector<vector3_t> {
   pinocchio::GeometryData geometryData(*geometryModelPtr_);
 
-  std::cout<<"model geometry: "<<geometryData<<std::endl;
-
   pinocchio::updateGeometryPlacements(pinocchioInterface.getModel(), pinocchioInterface.getData(), *geometryModelPtr_, geometryData);
-
-  std::cout<<"model description: "<<pinocchioInterface.getModel()<<std::endl;
 
   std::vector<vector3_t> sphereCentersInWorldFrame(numSpheresInTotal_);
 
-  printf("-----------numSpheresInTotal_: %d\n", numSpheresInTotal_);
+  //printf("-----------numSpheresInTotal_: %d\n", numSpheresInTotal_);
 
   size_t count = 0;
   for (size_t i = 0; i < numPrimitiveShapes_; i++) {
     const auto& objTransform = geometryData.oMg[geomObjIds_[i]];
     const auto& sphereCentersToObjectCenter = sphereApproximations_[i].getSphereCentersToObjectCenter();
     for (size_t j = 0; j < numSpheres_[i]; j++) {
+      // std::cout << " ------objTransform_translation: " << objTransform.translation() << std::endl;
+      // std::cout << " ------objTransform_rotation: " << objTransform.rotation() << std::endl;
       sphereCentersInWorldFrame[count] = objTransform.translation();
       sphereCentersInWorldFrame[count].noalias() += objTransform.rotation() * sphereCentersToObjectCenter[j];
       count++;

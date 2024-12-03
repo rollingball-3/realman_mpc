@@ -1,0 +1,8 @@
+geometry_msgs/Point[] link_positions
+---
+std_msgs/Float32 voxel_size
+# The values of the ESDF for the seven links
+std_msgs/Float32MultiArray esdf_values
+# The gradients of the ESDF for the seven links
+geometry_msgs/Vector3[] gradients
+bool valid

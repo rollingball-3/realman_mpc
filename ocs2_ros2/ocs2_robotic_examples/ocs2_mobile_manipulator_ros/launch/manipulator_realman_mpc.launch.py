@@ -32,7 +32,7 @@ def generate_launch_description():
         ),
         launch.actions.DeclareLaunchArgument(
             name='rvizconfig',
-            default_value=get_package_share_directory('ocs2_mobile_manipulator_ros') + "/rviz/mobile_manipulator.rviz"
+            default_value=get_package_share_directory('ocs2_mobile_manipulator_ros') + "/rviz/realman_esdf.rviz"
         ),
         Node(
             package='rviz2',

@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 17)
+# set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(ocs2_mobile_manipulator)
 
 
@@ -17,6 +18,9 @@ set(dependencies
   Boost
   pinocchio
   hpp-fcl
+  nvblox_msgs
+  std_msgs
+  geometry_msgs
 )
 
 find_package(ament_cmake REQUIRED)
@@ -29,6 +33,9 @@ find_package(ocs2_robotic_tools REQUIRED)
 find_package(ocs2_robotic_assets REQUIRED)
 find_package(ocs2_self_collision REQUIRED)
 find_package(ocs2_sphere_approximation REQUIRED)
+find_package(nvblox_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS
   system
@@ -80,12 +87,15 @@ add_library(${PROJECT_NAME}
   src/dynamics/FloatingArmManipulatorDynamics.cpp
   src/dynamics/FullyActuatedFloatingArmManipulatorDynamics.cpp
   src/MobileManipulatorInterface.cpp
+  src/EsdfClientInterface.cpp
+  src/constraint/ObstacleAvoidanceConstraint.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME}
   ${dependencies}
 )
 target_compile_options(${PROJECT_NAME} PUBLIC ${FLAGS})
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 ####################
 ## Clang tooling ###

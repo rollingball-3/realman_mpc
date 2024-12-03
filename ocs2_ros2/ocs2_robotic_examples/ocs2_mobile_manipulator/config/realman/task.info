@@ -27,7 +27,7 @@ ddp
 {
   algorithm                       SLQ
 
-  nThreads                        4
+  nThreads                        6
   threadPriority                  50
 
   maxNumIterations                1
@@ -81,7 +81,7 @@ mpc
   solutionTimeWindow              0.2   ; [s]
   coldStart                       false
   
-  debugPrint                      false
+  debugPrint                      true
 
   mpcDesiredFrequency             100   ; [Hz]
   mrtDesiredFrequency             400   ; [Hz]
@@ -114,13 +114,13 @@ inputCost
     {
       scaling 1e-2
 
-      (0,0)  1.0  ; joint_1 velocity
-      (1,1)  1.0  ; joint_2 velocity
-      (2,2)  1.0  ; joint_3 velocity
-      (3,3)  1.0  ; joint_4 velocity
-      (4,4)  1.0  ; joint_5 velocity
-      (5,5)  1.0  ; joint_6 velocity
-      (6,6)  1.0  ; joint_7 velocity
+      (0,0)  100.0  ; joint_1 velocity
+      (1,1)  100.0  ; joint_2 velocity
+      (2,2)  100.0  ; joint_3 velocity
+      (3,3)  100.0  ; joint_4 velocity
+      (4,4)  100.0  ; joint_5 velocity
+      (5,5)  100.0  ; joint_6 velocity
+      (6,6)  100.0  ; joint_7 velocity
     }
   }
 }
@@ -136,6 +136,22 @@ finalEndEffector
 {
   muPosition      55.0
   muOrientation   30.0
+}
+
+obstacleAvoidance
+{
+  ; activate obstacle avoidance
+  activate  true
+
+  ; relaxed log barrier mu
+  mu      1e-2
+
+  ; relaxed log barrier delta
+  delta     1e-3
+
+  ; obstacle avoidance weight
+  weight    1.0
+
 }
 
 selfCollision
@@ -183,13 +199,13 @@ SphereApproximation
   ;maximum allowed distances between the surfaces of the collision primitives and collision spheres
   maxExcesses
   {
-    [0] 0.05
-    [1] 0.05
-    [2] 0.05
-    [3] 0.05
-    [4] 0.05
-    [5] 0.05
-    [6] 0.05
+    [0] 0.20
+    [1] 0.20
+    [2] 0.20
+    [3] 0.20
+    [4] 0.20
+    [5] 0.20
+    [6] 0.20
   }
 
   ; shrink ratio
@@ -214,7 +230,7 @@ jointPositionLimits
 jointVelocityLimits
 {
   ; relaxed log barrier mu
-  mu      1e-5
+  mu      5e-5
 
   ; relaxed log barrier delta
   delta   1e-4

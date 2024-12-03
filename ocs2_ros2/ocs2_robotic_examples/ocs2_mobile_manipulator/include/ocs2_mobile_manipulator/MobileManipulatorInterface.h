@@ -42,6 +42,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ocs2_pinocchio_interface/PinocchioInterface.h>
 #include <ocs2_sphere_approximation/PinocchioSphereInterface.h>
 
+#include <ocs2_mobile_manipulator/EsdfClientInterface.h>
+
 #include <rclcpp/rclcpp.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
@@ -86,6 +88,8 @@ class MobileManipulatorInterface final : public RobotInterface {
   
   const ManipulatorModelInfo& getManipulatorModelInfo() const { return manipulatorModelInfo_; }
 
+  const EsdfClientInterface& getEsdfClientInterface() const { return *esdfClientInterfacePtr_; }
+
   // Publish Sphere Approximation
   void publishSphereVisualization(rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr publisher);
 
@@ -99,6 +103,10 @@ class MobileManipulatorInterface final : public RobotInterface {
                                                         const std::string& urdfFile, const std::string& prefix, bool useCaching,
                                                         const std::string& libraryFolder, bool recompileLibraries);
   std::unique_ptr<StateInputCost> getJointLimitSoftConstraint(const PinocchioInterface& pinocchioInterface, const std::string& taskFile);
+
+  std::unique_ptr<StateCost> getObstacleAvoidanceConstraint(const PinocchioSphereInterface& pinocchioSphereInterface, EsdfClientInterface& esdfClientInterface, const std::string& taskFile,
+                                                                 const std::string& prefix, bool useCaching, const std::string& libraryFolder,
+                                                                 bool recompileLibraries);
 
   PinocchioSphereInterface createPinocchioSphereInterface(const PinocchioInterface& pinocchioInterface, const std::string& taskFile, const std::string& prefix);
 
@@ -115,6 +123,9 @@ class MobileManipulatorInterface final : public RobotInterface {
 
   // TODO add new sphere interface
   std::unique_ptr<PinocchioSphereInterface> pinocchioSphereInterfacePtr_;
+
+  // TODO add new esdf client interface
+  std::unique_ptr<EsdfClientInterface> esdfClientInterfacePtr_;
 
   ManipulatorModelInfo manipulatorModelInfo_;
 
