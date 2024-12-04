@@ -76,15 +76,24 @@ vector_t ObstacleAvoidanceConstraint::getEsdfConstraintValue(const PinocchioInte
     // get the sphere radiis
     const auto& sphereRadii = pinocchioSphereInterface.getSphereRadii();
 
-    vector_t esdfValue = vector_t::Zero(adjustedSphereCenters.size());
-    Eigen::Vector3d direction = Eigen::Vector3d::Zero();
-
-    //call the esdf client to get the esdf value
-    for (size_t i = 0; i < adjustedSphereCenters.size(); ++i) {
-        const auto& esdf = esdfClientInterface.getEsdf(adjustedSphereCenters[i], direction);
-        // esdf: 1D vector, size = number of voxels in the aabb
-        esdfValue[i] = esdf[0];
+    // RCLCPP_INFO(this->get_logger(), "sphereRadii size: %zu", sphereRadii.size());
+    
+    for (const auto& radius : sphereRadii) {
+        std::cout << "sphere radius: " << radius << std::endl;
     }
+
+    std::vector<float> esdfValue;
+    std::vector<Eigen::Vector3d> gradients;
+
+    // //call the esdf client to get the esdf value
+    // for (size_t i = 0; i < adjustedSphereCenters.size(); ++i) {
+    //     const auto& esdf = esdfClientInterface.getEsdf(adjustedSphereCenters[i]);
+    //     // esdf: 1D vector, size = number of voxels in the aabb
+    //     esdfValue[i] = esdf[0];
+    // }
+    EsdfClientInterface::EsdfResponse esdfResponse = esdfClientInterface.getEsdf(adjustedSphereCenters);
+    esdfValue = esdfResponse.esdf_values;
+    gradients = esdfResponse.gradients;
 
     vector_t constraintValue = vector_t::Zero(esdfValue.size());
     // compute the constraint value

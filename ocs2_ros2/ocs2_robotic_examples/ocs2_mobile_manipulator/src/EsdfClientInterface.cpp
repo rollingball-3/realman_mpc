@@ -33,7 +33,13 @@ nvblox_msgs::srv::VoxelEsdfAndGradients::Response EsdfClientInterface::callEsdfS
     // request->aabb_size_m.y = direction(1);
     // request->aabb_size_m.z = direction(2);
 
-    request->link_positions = link_positions;
+    for (const auto& position : link_positions) {
+        geometry_msgs::msg::Point point;
+        point.x = position(0);
+        point.y = position(1);
+        point.z = position(2);
+        request->link_positions.push_back(point);
+    }
 
     auto future = client_->async_send_request(request);
 
@@ -72,15 +78,23 @@ nvblox_msgs::srv::VoxelEsdfAndGradients::Response EsdfClientInterface::callEsdfS
 //     RCLCPP_INFO(this->get_logger(), "Updated direction: [%f, %f, %f]", direction_.x(), direction_.y(), direction_.z());
 // }
 
-std::vector<float> EsdfClientInterface::getEsdf(std::vector<Eigen::Vector3d>& link_positions){
+EsdfClientInterface::EsdfResponse EsdfClientInterface::getEsdf(std::vector<Eigen::Vector3d>& link_positions){
     // setPoint(point);
     // setDirection(direction);
     nvblox_msgs::srv::VoxelEsdfAndGradients::Response esdf_response_ = callEsdfService(link_positions);
     if (has_esdf_response_ && esdf_response_.valid) {
-        return esdf_response_.esdf_values.data;
+        EsdfResponse esdf_response;
+        esdf_response.esdf_values = esdf_response_.esdf_values.data;
+        esdf_response.gradients.reserve(esdf_response_.gradients.size());
+        for (const auto& gradient : esdf_response_.gradients) {
+            Eigen::Vector3d gradient_eigen;
+            gradient_eigen << gradient.x, gradient.y, gradient.z;
+            esdf_response.gradients.push_back(gradient_eigen);
+        }
+        return esdf_response;
     } else {
         RCLCPP_ERROR(this->get_logger(), "No ESDF response available.");
-        return std::vector<float>();
+        return EsdfResponse();
     }
 }
 
