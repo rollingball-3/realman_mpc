@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot
-  name="rm_75_description">
-  <link name="world"/>
+  name="rm_75_6f_description">
+  <!-- <link name="world"/>
   <joint name="world_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="world"/>
     <child link="base_link"/>
-  </joint>
+  </joint> -->
   <link
     name="base_link">
     <inertial>
@@ -29,7 +29,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/base_link.STL" />
+          filename="file://$(find rm_description)/meshes/rm_75_6f_arm/base_link.STL" />
       </geometry>
       <material
         name="">
@@ -48,7 +48,6 @@
           length="0.0012"
           radius="0.0006" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <link
@@ -73,7 +72,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link1.STL" />
+          filename="file://$(find rm_description)/meshes/rm_75_6f_arm/Link1.STL" />
       </geometry>
       <material
         name="">
@@ -92,7 +91,6 @@
           length="0.1015"
           radius="0.08" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <joint
@@ -140,7 +138,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link2.STL" />
+          filename="file://$(find rm_description)/meshes/rm_75_6f_arm/Link2.STL" />
       </geometry>
       <material
         name="">
@@ -160,7 +158,6 @@
           radius="0.06" />
       </geometry>
     </collision>
-    </collision>
   </link>
   <joint
     name="joint2"
@@ -175,8 +172,8 @@
     <axis
       xyz="0 1 0" />
     <limit
-      lower="-0.268"
-      upper="0.268"
+      lower="-2.268"
+      upper="2.268"
       effort="60"
       velocity="3.14" />
     <!-- <limit
@@ -207,7 +204,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link3.STL" />
+          filename="file://$(find rm_description)/meshes/rm_75_6f_arm/Link3.STL" />
       </geometry>
       <material
         name="">
@@ -226,7 +223,6 @@
           length="0.125"
           radius="0.08" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <joint
@@ -269,7 +265,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link4.STL" />
+          filename="file://$(find rm_description)/meshes/rm_75_6f_arm/Link4.STL" />
       </geometry>
       <material
         name="">
@@ -288,7 +284,6 @@
           length="0.1285"
           radius="0.06" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <joint
@@ -331,7 +326,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link5.STL" />
+          filename="file://$(find rm_description)/meshes/rm_75_6f_arm/Link5.STL" />
       </geometry>
       <material
         name="">
@@ -350,7 +345,6 @@
           length="0.0815"
           radius="0.08" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <joint
@@ -393,7 +387,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link6.STL" />
+          filename="file://$(find rm_description)/meshes/rm_75_6f_arm/Link6.STL" />
       </geometry>
       <material
         name="">
@@ -412,7 +406,6 @@
           length="0.160"
           radius="0.06" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <joint
@@ -455,7 +448,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/rm_75_6f_arm/Link7.STL" />
+          filename="file://$(find rm_description)/meshes/rm_75_6f_arm/Link7.STL" />
       </geometry>
       <material
         name="">
@@ -475,7 +468,6 @@
           radius="0.02" />
       </geometry>
     </collision>
-    </collision>
   </link>
   <joint
     name="joint7"
@@ -494,13 +486,7 @@
       upper="6.28"
       effort="10"
       velocity="3.92" />
-  </joint>
-  <!--定义一个工具坐标系-->
-  <link name="realman_tip"/>
-  <joint name="tip_joint" type="fixed">
-    <origin xyz="0 0 0.1522" rpy="0 0 0"/>
-    <parent link="Link7"/>
-    <child link="realman_tip"/>
+  
   </joint>
 
   <link
@@ -525,7 +511,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/camera_connect.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/camera_connect.STL" />
       </geometry>
       <material
         name="">
@@ -534,15 +520,13 @@
       </material>
     </visual>
     <collision>
-    <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/camera_connect.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/camera_connect.STL" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <joint
@@ -557,6 +541,21 @@
       link="camera_connect" />
     <axis
       xyz="0 0 0" />
+  </joint>
+  
+  <!--定义一个工具坐标系-->
+  <link name="gripper_tip_link"/>
+  <joint name="gripper_tip_joint" type="fixed">
+    <origin xyz="0 0 0.1522" rpy="0 0 0"/>
+    <parent link="Link7"/>
+    <child link="gripper_tip_link"/>
+  </joint>
+  <!--通过相机标定结果发布坐标系-->
+  <link name="hand_link"/>
+  <joint name="hand_camera_joint" type="fixed">
+    <origin xyz="9.118397057093950708e-02 -1.184690085767839060e-02 -1.088632721090737610e-01" rpy="-3.141592653589793 -1.5707963267948966 0.0"/>
+    <parent link="gripper_tip_link"/>
+    <child link="hand_link"/>
   </joint>
 
   <!-- gripper -->
@@ -582,7 +581,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/gripper_base_link.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/gripper_base_link.STL" />
       </geometry>
       <material
         name="">
@@ -591,15 +590,13 @@
       </material>
     </visual>
     <collision>
-    <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/gripper_base_link.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/gripper_base_link.STL" />
       </geometry>
-    </collision>
     </collision>
   </link>
 
@@ -631,7 +628,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/gripper_Link1.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/gripper_Link1.STL" />
       </geometry>
       <material
         name="">
@@ -640,20 +637,18 @@
       </material>
     </visual>
     <collision>
-    <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/gripper_Link1.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/gripper_Link1.STL" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <joint
     name="gripper_joint1"
-    type="fixed">
+    type="revolute">
     <origin
       xyz="0 -0.04 0.09"
       rpy="0.8663 0 0" />
@@ -661,6 +656,14 @@
       link="gripper_base_link" />
     <child
       link="gripper_Link1" />
+      <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-1.5708"
+      upper="1.5708"
+      effort="100"
+      velocity="1" />
+
   </joint>
   <link
     name="gripper_Link2">
@@ -684,7 +687,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/gripper_Link2.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/gripper_Link2.STL" />
       </geometry>
       <material
         name="">
@@ -693,20 +696,18 @@
       </material>
     </visual>
     <collision>
-    <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/gripper_Link2.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/gripper_Link2.STL" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <joint
     name="gripper_joint2"
-    type="fixed">
+    type="revolute">
     <origin
       xyz="0 0.022341 0.035565"
       rpy="-0.8663 0 0" />
@@ -714,7 +715,18 @@
       link="gripper_Link1" />
     <child
       link="gripper_Link2" />
-  </joint>
+      <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-1.5708"
+      upper="1.5708"
+      effort="100"
+      velocity="1" />
+    <mimic
+      joint="gripper_joint1"
+      multiplier="1"
+      offset="0" /> 
+    </joint>
   <link
     name="gripper_Link3">
     <inertial>
@@ -737,7 +749,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/gripper_Link3.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/gripper_Link3.STL" />
       </geometry>
       <material
         name="">
@@ -746,20 +758,18 @@
       </material>
     </visual>
     <collision>
-    <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/gripper_Link3.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/gripper_Link3.STL" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <joint
     name="gripper_joint3"
-    type="fixed">
+    type="revolute">
     <origin
       xyz="0 0.04 0.09"
       rpy="-0.8663 0 0" />
@@ -767,6 +777,17 @@
       link="gripper_base_link" />
     <child
       link="gripper_Link3" />
+      <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-1.5708"
+      upper="1.5708"
+      effort="100"
+      velocity="1" />
+    <!-- <mimic
+      joint="gripper_joint1"
+      multiplier="1"
+      offset="0" />  -->
   </joint>
   <link
     name="gripper_Link4">
@@ -790,7 +811,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/gripper_Link4.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/gripper_Link4.STL" />
       </geometry>
       <material
         name="">
@@ -799,20 +820,18 @@
       </material>
     </visual>
     <collision>
-    <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://rm_description/meshes/gripper/gripper_Link4.STL" />
+          filename="file://$(find rm_description)/meshes/gripper/gripper_Link4.STL" />
       </geometry>
-    </collision>
     </collision>
   </link>
   <joint
     name="gripper_joint4"
-    type="fixed">
+    type="revolute">
     <origin
       xyz="0 -0.022341 0.035565"
       rpy="0.8663 0 0" />
@@ -820,5 +839,16 @@
       link="gripper_Link3" />
     <child
       link="gripper_Link4" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-1.5708"
+      upper="1.5708"
+      effort="100"
+      velocity="1" />
+    <mimic
+      joint="gripper_joint3"
+      multiplier="1"
+      offset="0" />
   </joint>
 </robot>

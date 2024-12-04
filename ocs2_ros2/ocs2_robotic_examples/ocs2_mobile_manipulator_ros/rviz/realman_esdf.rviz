@@ -5,9 +5,12 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Status1
         - /RobotModel1
-      Splitter Ratio: 0.5
-    Tree Height: 439
+        - /TF1/Frames1
+        - /TF1/Tree1
+      Splitter Ratio: 0.6176470518112183
+    Tree Height: 513
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -60,77 +63,101 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        panda_hand:
+        Link1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_hand_tcp:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        panda_leftfinger:
+        Link2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_link0:
+        Link3:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_link1:
+        Link4:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_link2:
+        Link5:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_link3:
+        Link6:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_link4:
+        Link7:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_link5:
+        base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_link6:
+        camera_connect:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_link7:
+        camera_frame_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        gripper_Link1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_link8:
+        gripper_Link2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        panda_rightfinger:
+        gripper_Link3:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        root:
+        gripper_Link4:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-      Mass Properties:
-        Inertia: false
-        Mass: false
+          Value: true
+        gripper_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gripper_tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        hand_frame_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        hand_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        head_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        odom:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
       Name: RobotModel
       TF Prefix: ""
       Update Interval: 0
@@ -141,37 +168,47 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        command:
+        Link1:
           Value: true
-        panda_hand:
+        Link2:
           Value: true
-        panda_hand_tcp:
+        Link3:
           Value: true
-        panda_leftfinger:
+        Link4:
           Value: true
-        panda_link0:
+        Link5:
           Value: true
-        panda_link1:
+        Link6:
           Value: true
-        panda_link2:
+        Link7:
           Value: true
-        panda_link3:
+        base_link:
           Value: true
-        panda_link4:
+        camera_connect:
           Value: true
-        panda_link5:
+        camera_frame_link:
           Value: true
-        panda_link6:
+        gripper_Link1:
           Value: true
-        panda_link7:
+        gripper_Link2:
           Value: true
-        panda_link8:
+        gripper_Link3:
           Value: true
-        panda_rightfinger:
+        gripper_Link4:
           Value: true
-        root:
+        gripper_base_link:
           Value: true
-        world:
+        gripper_tip_link:
+          Value: true
+        hand_frame_optical:
+          Value: true
+        hand_link:
+          Value: true
+        head_link:
+          Value: true
+        map:
+          Value: true
+        odom:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -179,26 +216,31 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        world:
-          command:
-            {}
-          root:
-            panda_link0:
-              panda_link1:
-                panda_link2:
-                  panda_link3:
-                    panda_link4:
-                      panda_link5:
-                        panda_link6:
-                          panda_link7:
-                            panda_link8:
-                              panda_hand:
-                                panda_hand_tcp:
+        map:
+          odom:
+            base_link:
+              Link1:
+                Link2:
+                  Link3:
+                    Link4:
+                      Link5:
+                        Link6:
+                          Link7:
+                            camera_connect:
+                              gripper_base_link:
+                                gripper_Link1:
+                                  gripper_Link2:
+                                    {}
+                                gripper_Link3:
+                                  gripper_Link4:
+                                    {}
+                            gripper_tip_link:
+                              hand_link:
+                                hand_frame_optical:
                                   {}
-                                panda_leftfinger:
-                                  {}
-                                panda_rightfinger:
-                                  {}
+              head_link:
+                camera_frame_link:
+                  {}
       Update Interval: 0
       Value: true
     - Class: rviz_default_plugins/MarkerArray
@@ -229,7 +271,6 @@ Visualization Manager:
       Topic:
         Depth: 5
         Durability Policy: Volatile
-        Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /mobile_manipulator/optimizedPoseTrajectory
@@ -247,7 +288,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        {}
+        sphere_approximation: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -255,10 +296,67 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: sphere_approximation
       Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Occupancy_grid
+      Namespaces:
+        layer: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /nvblox_node/color_layer
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 2
+      Min Color: 0; 0; 0
+      Min Intensity: 0.0707106813788414
+      Name: Esdf_pointcloud
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /nvblox_node/static_esdf_pointcloud
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Map_slice
+      Namespaces:
+        top_slice_limit: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /nvblox_node/map_slice_bounds
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 186; 189; 182
-    Fixed Frame: world
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -270,9 +368,6 @@ Visualization Manager:
     - Class: rviz_default_plugins/Measure
       Line color: 128; 128; 0
     - Class: rviz_default_plugins/SetInitialPose
-      Covariance x: 0.25
-      Covariance y: 0.25
-      Covariance yaw: 0.06853891909122467
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -301,7 +396,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 1.6701574325561523
+      Distance: 6.506893157958984
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -316,10 +411,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4003985524177551
+      Pitch: 0.21039853990077972
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz_default_plugins)
-      Yaw: 0.44039851427078247
+      Yaw: 1.5453983545303345
     Saved: ~
 Window Geometry:
   Displays:
@@ -327,10 +422,8 @@ Window Geometry:
   Height: 736
   Hide Left Dock: false
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd00000004000000000000015600000242fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d00000242000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000002b4fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000002b4000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004ba0000003efc0100000002fb0000000800540069006d00650100000000000004ba000002fb00fffffffb0000000800540069006d006501000000000000045000000000000000000000035e0000024200000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001560000028afc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003b0000028a000000c700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000002b4fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003b000002b4000000a000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004ba0000003efc0100000002fb0000000800540069006d00650100000000000004ba0000000000000000fb0000000800540069006d006501000000000000045000000000000000000000035e0000028a00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
-    collapsed: false
-  Time:
     collapsed: false
   Tool Properties:
     collapsed: false
@@ -338,4 +431,4 @@ Window Geometry:
     collapsed: true
   Width: 1210
   X: 70
-  Y: 27
+  Y: 31

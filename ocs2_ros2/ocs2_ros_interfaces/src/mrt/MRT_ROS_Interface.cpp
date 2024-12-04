@@ -301,6 +301,7 @@ void MRT_ROS_Interface::launchNodes(const rclcpp::Node::SharedPtr& node) {
   RCLCPP_INFO_STREAM(LOGGER, "MRT node is ready.");
 
   spinMRT();
+  RCLCPP_INFO_STREAM(LOGGER, "MRT node is shutting down.");
 }
 
 }  // namespace ocs2

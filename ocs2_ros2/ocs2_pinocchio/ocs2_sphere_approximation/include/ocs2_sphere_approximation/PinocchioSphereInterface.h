@@ -95,6 +95,10 @@ class PinocchioSphereInterface final {
   /** Get the number of spheres in total */
   size_t getNumSpheresInTotal() const { return numSpheresInTotal_; };
 
+  /** Get the PinocchioInterface */
+  const PinocchioInterface& getPinocchioInterface() const {return pinocchioInterface_;
+}
+  
   /** Get the array of the number of spheres of each approximation */
   const size_array_t& getNumSpheres() const { return numSpheres_; };
 
@@ -121,6 +125,8 @@ class PinocchioSphereInterface final {
   void buildGeomFromPinocchioInterface(const PinocchioInterface& pinocchioInterface, pinocchio::GeometryModel& geomModel);
 
   std::unique_ptr<pinocchio::GeometryModel> geometryModelPtr_;
+
+  const PinocchioInterface& pinocchioInterface_;
 
   // Sphere approximation for environment collision
   const std::vector<std::string> collisionLinks_;

@@ -27,7 +27,7 @@ ddp
 {
   algorithm                       SLQ
 
-  nThreads                        6
+  nThreads                        4
   threadPriority                  50
 
   maxNumIterations                1
@@ -81,7 +81,7 @@ mpc
   solutionTimeWindow              0.2   ; [s]
   coldStart                       false
   
-  debugPrint                      true
+  debugPrint                      false
 
   mpcDesiredFrequency             100   ; [Hz]
   mrtDesiredFrequency             400   ; [Hz]
@@ -114,13 +114,13 @@ inputCost
     {
       scaling 1e-2
 
-      (0,0)  100.0  ; joint_1 velocity
-      (1,1)  100.0  ; joint_2 velocity
-      (2,2)  100.0  ; joint_3 velocity
-      (3,3)  100.0  ; joint_4 velocity
-      (4,4)  100.0  ; joint_5 velocity
-      (5,5)  100.0  ; joint_6 velocity
-      (6,6)  100.0  ; joint_7 velocity
+      (0,0)  1.0  ; joint_1 velocity
+      (1,1)  1.0  ; joint_2 velocity
+      (2,2)  1.0  ; joint_3 velocity
+      (3,3)  1.0  ; joint_4 velocity
+      (4,4)  1.0  ; joint_5 velocity
+      (5,5)  1.0  ; joint_6 velocity
+      (6,6)  1.0  ; joint_7 velocity
     }
   }
 }
@@ -128,30 +128,14 @@ inputCost
 endEffector
 {
   ; end effector quadratic penalty scaling
-  muPosition      55.0
-  muOrientation   30.0
+  muPosition      50.0
+  muOrientation   25.0
 }
 
 finalEndEffector
 {
-  muPosition      55.0
-  muOrientation   30.0
-}
-
-obstacleAvoidance
-{
-  ; activate obstacle avoidance
-  activate  true
-
-  ; relaxed log barrier mu
-  mu      1e-2
-
-  ; relaxed log barrier delta
-  delta     1e-3
-
-  ; obstacle avoidance weight
-  weight    1.0
-
+  muPosition      50.0
+  muOrientation   25.0
 }
 
 selfCollision

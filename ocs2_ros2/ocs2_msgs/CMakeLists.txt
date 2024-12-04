@@ -3,6 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 project(ocs2_msgs)
 
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}

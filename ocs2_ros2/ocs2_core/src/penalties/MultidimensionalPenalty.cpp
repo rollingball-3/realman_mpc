@@ -31,6 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <ocs2_core/penalties/MultidimensionalPenalty.h>
 
+#include <iostream>
+
 namespace ocs2 {
 
 namespace {
@@ -129,6 +131,8 @@ scalar_t MultidimensionalPenalty::getValue(scalar_t t, const vector_t& h, const 
   for (size_t i = 0; i < numConstraints; i++) {
     const auto& penaltyTerm = (penaltyPtrArray_.size() == 1) ? penaltyPtrArray_[0] : penaltyPtrArray_[i];
     penalty += penaltyTerm->getValue(t, getMultiplier(l, i), h(i));
+    // print the penalty value
+    //std::cout << "Penalty value: " << penalty << std::endl;
   }
 
   return penalty;
