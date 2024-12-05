@@ -130,7 +130,7 @@ MobileManipulatorInterface::MobileManipulatorInterface(const std::string& taskFi
   pinocchioSphereInterfacePtr_.reset(new PinocchioSphereInterface(createPinocchioSphereInterface(*pinocchioInterfacePtr_, taskFile, "SphereApproximation")));
 
   // create esdf client interface
-  esdfClientInterfacePtr_.reset(new EsdfClientInterface("esdf_client", "/nvblox_node/get_voxel_esdf_and_gradients"));
+  esdfClientInterfacePtr_.reset(new EsdfClientInterface("esdf_client", "/nvblox_node/get_voxel_esdf_and_gradient"));
   // ManipulatorModelInfo
   manipulatorModelInfo_ = mobile_manipulator::createManipulatorModelInfo(*pinocchioInterfacePtr_, modelType, baseFrame, eeFrame);
 

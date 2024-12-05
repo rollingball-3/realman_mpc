@@ -50,10 +50,6 @@ nvblox_msgs::srv::VoxelEsdfAndGradients::Response EsdfClientInterface::callEsdfS
         auto response = future.get();
 
         if (response) {
-            // RCLCPP_INFO(this->get_logger(), "ESDF service call succeeded.");
-            // RCLCPP_INFO(this->get_logger(), "Voxel size: %f", response->voxel_size.data);
-            //RCLCPP_INFO(this->get_logger(), "ESDF data: %f", response->esdf_and_gradients.data[0]);
-
             nvblox_msgs::srv::VoxelEsdfAndGradients::Response esdf_response_ = *response;
             has_esdf_response_ = true;
             return esdf_response_;

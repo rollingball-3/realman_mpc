@@ -113,7 +113,7 @@ class GazeboMpcInterface(Node):
     def init_tf(self):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
-        self.source_frame = 'world'  # 源坐标系
+        self.source_frame = 'odom'  # 源坐标系
         self.target_frame = 'gripper_tip_link'
         self.tf_timer = self.create_timer(0.01, self.get_end_effect_transform)  # 每 0.01 秒执行一次 get_transform 函数
     

@@ -21,7 +21,7 @@ ObstacleAvoidanceConstraint::ObstacleAvoidanceConstraint(
     const PinocchioStateInputMapping<scalar_t>& mapping, 
     const PinocchioSphereInterface& pinocchioSphereInterface, 
     EsdfClientInterface& esdfClientInterface)
-    : StateConstraint(ConstraintOrder::Quadratic),
+    : StateConstraint(ConstraintOrder::Linear),
       pinocchioSphereInterface_(pinocchioSphereInterface), 
       esdfClientInterface_(esdfClientInterface),
       mappingPtr_(mapping.clone()) {}
@@ -39,11 +39,11 @@ vector_t ObstacleAvoidanceConstraint::getValue(scalar_t time, const vector_t& st
     
     auto* mutableThis = const_cast<ObstacleAvoidanceConstraint*>(this);
     //get the value of the esdf
-    return mutableThis->getEsdfConstraintValue(pinocchioInterface_, pinocchioSphereInterface_, esdfClientInterface_);
+    return mutableThis->getEsdfConstraintValue(pinocchioInterface_, pinocchioSphereInterface_, esdfClientInterface_).first;
     //return vector_t::Zero(getNumConstraints(time));
 }
 
-vector_t ObstacleAvoidanceConstraint::getEsdfConstraintValue(const PinocchioInterface &pinocchioInterface, const PinocchioSphereInterface &pinocchioSphereInterface, 
+std::pair<vector_t, std::vector<Eigen::Vector3d>> ObstacleAvoidanceConstraint::getEsdfConstraintValue(const PinocchioInterface &pinocchioInterface, const PinocchioSphereInterface &pinocchioSphereInterface, 
                                                                 EsdfClientInterface &esdfClientInterface){
     // Get the world coordinates of the 7 robot arm links
     const auto& model = pinocchioInterface.getModel();
@@ -78,9 +78,9 @@ vector_t ObstacleAvoidanceConstraint::getEsdfConstraintValue(const PinocchioInte
 
     // RCLCPP_INFO(this->get_logger(), "sphereRadii size: %zu", sphereRadii.size());
     
-    for (const auto& radius : sphereRadii) {
-        std::cout << "sphere radius: " << radius << std::endl;
-    }
+    // for (const auto& radius : sphereRadii) {
+    //     std::cout << "sphere radius: " << radius << std::endl;
+    // }
 
     std::vector<float> esdfValue;
     std::vector<Eigen::Vector3d> gradients;
@@ -101,8 +101,8 @@ vector_t ObstacleAvoidanceConstraint::getEsdfConstraintValue(const PinocchioInte
         constraintValue[i] = fabs(esdfValue[i]) - sphereRadii[i];
         //RCLCPP_INFO(this->get_logger(), "Constraint value: %f, radius: %f", constraintValue[i], sphereRadii[i]);
     }
-    std::cout << "constraintValue size: " << constraintValue.size() << std::endl;
-    return constraintValue;
+    //std::cout << "constraintValue size: " << constraintValue.size() << std::endl;
+    return std::make_pair(constraintValue, gradients);
 }
 
 size_t ObstacleAvoidanceConstraint::getNumConstraints(scalar_t time) const{
@@ -111,36 +111,63 @@ size_t ObstacleAvoidanceConstraint::getNumConstraints(scalar_t time) const{
 
 /******************************************************************************************************/
 /******************************************************************************************************/
-
+//linear approximation dfdq dfdu
 VectorFunctionLinearApproximation ObstacleAvoidanceConstraint::getLinearApproximation(scalar_t time, const vector_t& state,
-                                                            const PreComputation& preComputation) const {
-    
-}
-
-VectorFunctionQuadraticApproximation ObstacleAvoidanceConstraint::getQuadraticApproximation(scalar_t time, const vector_t& state,
-                                                            const PreComputation& preComputation) const {
+                                                            const PreComputation& preComputation) const {   
+    // 1. 获取预计算数据
     const auto& preComp = cast<MobileManipulatorPreComputation>(preComputation);
     const auto& pinocchioInterface_ = preComp.getPinocchioInterface();
     mappingPtr_->setPinocchioInterface(pinocchioInterface_);
 
-    VectorFunctionQuadraticApproximation constraint;
+    VectorFunctionLinearApproximation constraint;
     matrix_t dfdq, dfdv;
     
-    // Get constraint value and first derivatives
-    //std::tie(constraint.f, dfdq) = getEsdfConstraintValue(pinocchioInterface_, pinocchioSphereInterface_, esdfClientInterface_);
-    constraint.f = getValue(time, state, preComp);
+    // 2. 计算约束值和梯度
+    auto* mutableThis = const_cast<ObstacleAvoidanceConstraint*>(this);
+    auto [constraintValues, gradients] = mutableThis->getEsdfConstraintValue(pinocchioInterface_, 
+                                                                           pinocchioSphereInterface_, 
+                                                                           esdfClientInterface_);
+    constraint.f = constraintValues;
+
+    // 3. 计算雅可比矩阵
+    // 获取机器人的雅可比矩阵
+    const auto& model = pinocchioInterface_.getModel();
+    const auto& data = pinocchioInterface_.getData();
     
+    // 为每个球体计算雅可比矩阵
+    const auto& spherePositions = pinocchioSphereInterface_.computeSphereCentersInWorldFrame(pinocchioInterface_);
+    dfdq.setZero(spherePositions.size(), model.nq);
     
-    // Map Pinocchio jacobian to OCS2 state space
+    for (size_t i = 0; i < spherePositions.size(); ++i) {
+        // 获取球体所在关节的雅可比矩阵
+        matrix_t sphereJacobian = matrix_t::Zero(6, model.nv);
+        pinocchio::getJointJacobian(model, data, i+1, pinocchio::ReferenceFrame::LOCAL_WORLD_ALIGNED, sphereJacobian);
+        
+        // 将ESDF梯度与关节雅可比相乘
+        dfdq.row(i) = gradients[i].transpose() * sphereJacobian.topRows(3);
+    }
+    
+    // 4. 映射到OCS2状态空间
+    dfdv.setZero(dfdq.rows(), dfdq.cols());
     std::tie(constraint.dfdx, std::ignore) = mappingPtr_->getOcs2Jacobian(state, dfdq, dfdv);
     
-    // Initialize second order terms as zero
-    const size_t stateDim = state.size();
-    const size_t numConstraints = constraint.f.size();
-    constraint.dfdxx.resize(numConstraints);
-    for (size_t i = 0; i < numConstraints; i++) {
-        constraint.dfdxx[i].setZero(stateDim, stateDim);
-    }
+    return constraint;
+}
+
+VectorFunctionQuadraticApproximation ObstacleAvoidanceConstraint::getQuadraticApproximation(scalar_t time, const vector_t& state,
+                                                            const PreComputation& preComputation) const {
+    VectorFunctionQuadraticApproximation constraint;
+
+    auto linearApprox = getLinearApproximation(time, state, preComputation);
+    constraint.f = std::move(linearApprox.f);
+    constraint.dfdx = std::move(linearApprox.dfdx);
+    constraint.dfdu = std::move(linearApprox.dfdu);
+
+    const auto inputDim_ = 7;
+    // TODO: 二阶导数设置为0
+    constraint.dfdxx.assign(constraint.f.size(), matrix_t::Zero(state.size(), state.size()));
+    constraint.dfdux.assign(constraint.f.size(), matrix_t::Zero(inputDim_, state.size()));
+    constraint.dfduu.assign(constraint.f.size(), matrix_t::Zero(inputDim_, inputDim_));
 
     return constraint;
 }
