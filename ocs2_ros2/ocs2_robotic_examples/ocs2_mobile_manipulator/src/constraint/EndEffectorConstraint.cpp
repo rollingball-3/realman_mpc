@@ -80,6 +80,7 @@ vector_t EndEffectorConstraint::getValue(scalar_t time, const vector_t& state, c
 VectorFunctionLinearApproximation EndEffectorConstraint::getLinearApproximation(scalar_t time, const vector_t& state,
                                                                                 const PreComputation& preComputation) const {
   // PinocchioEndEffectorKinematics requires pre-computation with shared PinocchioInterface.
+  std::cout << "----------------EndEffectorConstraint getLinearApproximation----------------" << std::endl;
   if (pinocchioEEKinPtr_ != nullptr) {
     const auto& preCompMM = cast<MobileManipulatorPreComputation>(preComputation);
     pinocchioEEKinPtr_->setPinocchioInterface(preCompMM.getPinocchioInterface());

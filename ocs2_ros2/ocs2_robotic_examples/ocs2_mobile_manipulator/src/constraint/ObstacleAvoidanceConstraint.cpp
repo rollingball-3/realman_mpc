@@ -34,6 +34,8 @@ ObstacleAvoidanceConstraint::ObstacleAvoidanceConstraint(const ObstacleAvoidance
 
 vector_t ObstacleAvoidanceConstraint::getValue(scalar_t time, const vector_t& state, const PreComputation& preComputation) const{
     //get the state of the robot
+    //std::cout << "state size: " << state.size() << std::endl;
+
     const auto& preComp = cast<MobileManipulatorPreComputation>(preComputation);
     const auto& pinocchioInterface_ = preComp.getPinocchioInterface();
     
@@ -95,13 +97,59 @@ std::pair<vector_t, std::vector<Eigen::Vector3d>> ObstacleAvoidanceConstraint::g
     esdfValue = esdfResponse.esdf_values;
     gradients = esdfResponse.gradients;
 
+    // for (size_t i = 0; i < esdfValue.size(); ++i) {
+    //     std::cout << "ESDF value: " << esdfValue[i] << std::endl;
+    //     std::cout << "Gradient: " << gradients[i].transpose() << std::endl;
+    // }
+
     vector_t constraintValue = vector_t::Zero(esdfValue.size());
     // compute the constraint value
     for (size_t i = 0; i < esdfValue.size(); ++i) {
         constraintValue[i] = fabs(esdfValue[i]) - sphereRadii[i];
-        //RCLCPP_INFO(this->get_logger(), "Constraint value: %f, radius: %f", constraintValue[i], sphereRadii[i]);
+        if (constraintValue[i] > 1) {
+            constraintValue[i] = 1;
+        }
     }
     //std::cout << "constraintValue size: " << constraintValue.size() << std::endl;
+    // for (size_t i = 0; i < constraintValue.size(); ++i) {
+    //     std::cout << "Constraint value: " << constraintValue[i] << std::endl;
+    // }
+
+    // 1. 检查ESDF值的连续性
+    for (size_t i = 0; i < esdfValue.size(); ++i) {
+        if (!std::isfinite(esdfValue[i])) {
+            throw std::runtime_error("ESDF value is not finite at index " + std::to_string(i));
+        }
+    }
+
+    // 2. 检查梯度的连续性
+    for (size_t i = 0; i < gradients.size(); ++i) {
+        if (!gradients[i].allFinite()) {
+            throw std::runtime_error("ESDF gradient is not finite at index " + std::to_string(i));
+        }
+        
+        // 检查梯度大小是否合理
+        const double gradientNorm = gradients[i].norm();
+        if (gradientNorm > 1e3) {  // 设置一个合理的阈值
+            throw std::runtime_error("ESDF gradient norm too large: " + std::to_string(gradientNorm));
+        }
+    }
+
+    // 3. 检查约束值的连续性
+    for (size_t i = 0; i < constraintValue.size(); ++i) {
+        if (!std::isfinite(constraintValue[i])) {
+            throw std::runtime_error("Constraint value is not finite at index " + std::to_string(i));
+        }
+        
+        // 检查约束值的变化率
+        if (i > 0) {
+            const double constraintChange = std::abs(constraintValue[i] - constraintValue[i-1]);
+            if (constraintChange > 1.0) {  // 设置一个合理的阈值
+                throw std::runtime_error("Constraint value changes too rapidly: " + std::to_string(constraintChange));
+            }
+        }
+    }
+
     return std::make_pair(constraintValue, gradients);
 }
 
@@ -114,6 +162,7 @@ size_t ObstacleAvoidanceConstraint::getNumConstraints(scalar_t time) const{
 //linear approximation dfdq dfdu
 VectorFunctionLinearApproximation ObstacleAvoidanceConstraint::getLinearApproximation(scalar_t time, const vector_t& state,
                                                             const PreComputation& preComputation) const {   
+    std::cout << "----------------getLinearApproximation----------------" << std::endl;
     // 1. 获取预计算数据
     const auto& preComp = cast<MobileManipulatorPreComputation>(preComputation);
     const auto& pinocchioInterface_ = preComp.getPinocchioInterface();
@@ -143,19 +192,45 @@ VectorFunctionLinearApproximation ObstacleAvoidanceConstraint::getLinearApproxim
         matrix_t sphereJacobian = matrix_t::Zero(6, model.nv);
         pinocchio::getJointJacobian(model, data, i+1, pinocchio::ReferenceFrame::LOCAL_WORLD_ALIGNED, sphereJacobian);
         
-        // 将ESDF梯度与关节雅可比相乘
+        // 将ESDF梯???与关节雅可比相乘
         dfdq.row(i) = gradients[i].transpose() * sphereJacobian.topRows(3);
+    }
+
+    std::cout << "dfdq size: " << dfdq.rows() << " " << dfdq.cols() << std::endl;
+    for (size_t i = 0; i < dfdq.rows(); ++i) {
+        std::cout << "dfdq row " << i << ": " << dfdq.row(i).transpose() << std::endl;
     }
     
     // 4. 映射到OCS2状态空间
     dfdv.setZero(dfdq.rows(), dfdq.cols());
     std::tie(constraint.dfdx, std::ignore) = mappingPtr_->getOcs2Jacobian(state, dfdq, dfdv);
+
+    std::cout << "dfdx size: " << constraint.dfdx.rows() << " " << constraint.dfdx.cols() << std::endl;
+    for (size_t i = 0; i < constraint.dfdx.rows(); ++i) {
+        std::cout << "dfdx row " << i << ": " << constraint.dfdx.row(i).transpose() << std::endl;
+    }
+    
+    // 检查雅可比矩阵的数值稳定性
+    for (size_t i = 0; i < spherePositions.size(); ++i) {
+        matrix_t sphereJacobian = matrix_t::Zero(6, model.nv);
+        pinocchio::getJointJacobian(model, data, i+1, pinocchio::ReferenceFrame::LOCAL_WORLD_ALIGNED, sphereJacobian);
+        
+        // 检查雅可比矩阵的条件数
+        Eigen::JacobiSVD<matrix_t> svd(sphereJacobian);
+        double conditionNumber = svd.singularValues()(0) / 
+                               svd.singularValues()(svd.singularValues().size()-1);
+        
+        if (conditionNumber > 1e6) {  // 设置一个合理的阈值
+            throw std::runtime_error("Jacobian poorly conditioned: " + std::to_string(conditionNumber));
+        }
+    }
     
     return constraint;
 }
 
 VectorFunctionQuadraticApproximation ObstacleAvoidanceConstraint::getQuadraticApproximation(scalar_t time, const vector_t& state,
                                                             const PreComputation& preComputation) const {
+    std::cout << "----------------getQuadraticApproximation----------------" << std::endl;
     VectorFunctionQuadraticApproximation constraint;
 
     auto linearApprox = getLinearApproximation(time, state, preComputation);
