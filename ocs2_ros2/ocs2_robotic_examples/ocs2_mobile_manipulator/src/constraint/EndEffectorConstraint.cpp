@@ -80,6 +80,7 @@ vector_t EndEffectorConstraint::getValue(scalar_t time, const vector_t& state, c
 VectorFunctionLinearApproximation EndEffectorConstraint::getLinearApproximation(scalar_t time, const vector_t& state,
                                                                                 const PreComputation& preComputation) const {
   // PinocchioEndEffectorKinematics requires pre-computation with shared PinocchioInterface.
+  std::cout << "----------------EndEffectorConstraint getLinearApproximation----------------" << std::endl;
   if (pinocchioEEKinPtr_ != nullptr) {
     const auto& preCompMM = cast<MobileManipulatorPreComputation>(preComputation);
     pinocchioEEKinPtr_->setPinocchioInterface(preCompMM.getPinocchioInterface());
@@ -93,8 +94,7 @@ VectorFunctionLinearApproximation EndEffectorConstraint::getLinearApproximation(
   approximation.f.head<3>() = eePosition.f - desiredPositionOrientation.first;
   approximation.dfdx.topRows<3>() = eePosition.dfdx;
 
-  const auto eeOrientationError =
-      endEffectorKinematicsPtr_->getOrientationErrorLinearApproximation(state, {desiredPositionOrientation.second}).front();
+  const auto eeOrientationError = endEffectorKinematicsPtr_->getOrientationErrorLinearApproximation(state, {desiredPositionOrientation.second}).front();
   approximation.f.tail<3>() = eeOrientationError.f;
   approximation.dfdx.bottomRows<3>() = eeOrientationError.dfdx;
 
