@@ -42,6 +42,32 @@ def find_nearest_timestamp_index(timestamps: List[int], current_time: int) -> in
         return insertion_point - 1
     else:
         return insertion_point
+    
+def interpolate_trajectory(timestamps, values, query_time):
+    """
+    在轨迹点之间进行线性插值
+    
+    Args:
+        timestamps: 时间序列
+        values: 对应的值序列
+        query_time: 查询时间点
+    
+    Returns:
+        插值后的值
+    """
+    if query_time <= timestamps[0]:
+        return values[0]
+    if query_time >= timestamps[-1]:
+        return values[-1]
+    
+    # 找到查询时间所在的区间
+    idx = bisect.bisect_right(timestamps, query_time) - 1
+    
+    # 计算插值
+    t0, t1 = timestamps[idx], timestamps[idx + 1]
+    v0, v1 = values[idx], values[idx + 1]
+    alpha = (query_time - t0) / (t1 - t0)
+    return [v0[i] + alpha * (v1[i] - v0[i]) for i in range(len(v0))]
 
 
 def send_mpc_reset_request(arm_name):
@@ -113,7 +139,7 @@ class GazeboMpcInterface(Node):
     def init_tf(self):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
-        self.source_frame = 'odom'  # 源坐标系
+        self.source_frame = 'world'  # 源坐标系
         self.target_frame = 'gripper_tip_link'
         self.tf_timer = self.create_timer(0.01, self.get_end_effect_transform)  # 每 0.01 秒执行一次 get_transform 函数
     
@@ -194,8 +220,14 @@ class GazeboMpcInterface(Node):
 
         current_time = self.get_elapsed_time()
         if len(self.mpc_policy.input_trajectory) > 0:
-            index = find_nearest_timestamp_index(self.mpc_policy.time_trajectory, current_time)
-            current_input = self.mpc_policy.input_trajectory[index].value
+            # index = find_nearest_timestamp_index(self.mpc_policy.time_trajectory, current_time)
+            # current_input = self.mpc_policy.input_trajectory[index].value
+            # 使用线性插值替代最近邻
+            current_input = interpolate_trajectory(
+                self.mpc_policy.time_trajectory,
+                [input.value for input in self.mpc_policy.input_trajectory],
+                current_time
+            )
             # self.get_logger().info(f'### current time is {current_time}, publish velocity command {current_input}')
             
             velocity_command = Float64MultiArray()

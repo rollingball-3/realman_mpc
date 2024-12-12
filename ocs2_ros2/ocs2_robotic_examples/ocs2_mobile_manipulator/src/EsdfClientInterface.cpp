@@ -21,10 +21,10 @@ EsdfClientInterface::EsdfClientInterface(const std::string& node_name, const std
 }
 
 nvblox_msgs::srv::VoxelEsdfAndGradients::Response EsdfClientInterface::callEsdfService(std::vector<Eigen::Vector3d>& link_positions){
-    if (!client_->service_is_ready()) {
-        RCLCPP_ERROR(this->get_logger(), "Service is not ready.");
-        return nvblox_msgs::srv::VoxelEsdfAndGradients::Response();
-    }
+    // if (!client_->service_is_ready()) {
+    //     RCLCPP_ERROR(this->get_logger(), "Service is not ready.");
+    //     return nvblox_msgs::srv::VoxelEsdfAndGradients::Response();
+    // }
     auto request = std::make_shared<nvblox_msgs::srv::VoxelEsdfAndGradients::Request>();
     // request->aabb_min_m.x = point(0);
     // request->aabb_min_m.y = point(1);
@@ -40,7 +40,7 @@ nvblox_msgs::srv::VoxelEsdfAndGradients::Response EsdfClientInterface::callEsdfS
         point.z = position(2);
         request->link_positions.push_back(point);
     }
-
+    std::lock_guard<std::mutex> lock(service_mutex_);
     auto future = client_->async_send_request(request);
 
     if (rclcpp::spin_until_future_complete(

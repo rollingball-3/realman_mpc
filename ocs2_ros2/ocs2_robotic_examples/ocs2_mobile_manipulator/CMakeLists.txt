@@ -94,6 +94,20 @@ add_library(${PROJECT_NAME}
 ament_target_dependencies(${PROJECT_NAME}
   ${dependencies}
 )
+
+add_executable(test_esdf_client test/test_esdf_client.cpp)
+ament_target_dependencies(test_esdf_client
+    ${dependencies}
+)
+target_link_libraries(test_esdf_client
+    ${PROJECT_NAME}
+)
+
+install(
+  TARGETS test_esdf_client
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
+)
+
 target_compile_options(${PROJECT_NAME} PUBLIC ${FLAGS})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 

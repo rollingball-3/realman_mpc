@@ -15,65 +15,10 @@ from .utils import generate_traj
 import bisect
 from typing import List
 
-# TODO real robot
-def find_nearest_timestamp_index(timestamps: List[int], current_time: int) -> int:
-    """
-    Find the index of the timestamp in the list that is closest to the given current time.
-    
-    Args:
-        timestamps (List[int]): A list of timestamps in increasing order.
-        current_time (int): The current time for which the nearest timestamp is to be found.
-        
-    Returns:
-        int: The index of the timestamp in the list that is closest to the current time.
-    """
-    # Use bisect_left to find the index of the first timestamp greater than or equal to current_time
-    insertion_point = bisect.bisect_left(timestamps, current_time)
-    
-    # If the insertion point is 0, return 0 as there are no timestamps smaller than current_time
-    if insertion_point == 0:
-        return 0
-    
-    # If the insertion point is len(timestamps), return len(timestamps) - 1 as there are no timestamps greater than current_time
-    if insertion_point == len(timestamps):
-        return len(timestamps) - 1
-    
-    # Otherwise, check which timestamp is closer to current_time and return the corresponding index
-    if current_time - timestamps[insertion_point - 1] < timestamps[insertion_point] - current_time:
-        return insertion_point - 1
-    else:
-        return insertion_point
 
-
-def send_mpc_reset_request(arm_name):
-    node = rclpy.create_node('mpc_reset_client')
-    cli = node.create_client(Reset, f'{arm_name}_mpc_reset')
-    while not cli.wait_for_service(timeout_sec=1.0):
-        node.get_logger().info(f'Service {arm_name}_mpc_reset not available, waiting again...')
-
-    req = Reset.Request()
-    req.reset = True
-    mpcstate = MpcState(value=[0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0])
-    mpcinput = MpcInput(value=[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-    target_traj = MpcTargetTrajectories(time_trajectory=[0.0], state_trajectory=[mpcstate], input_trajectory = [mpcinput])
-    req.target_trajectories = target_traj
-
-    try:
-        future = cli.call_async(req)
-        rclpy.spin_until_future_complete(node, future)
-        response = future.result()
-        if response.done:
-            node.get_logger().info(f'MPC Reset successful for {arm_name}')
-        else:
-            node.get_logger().error(f'MPC Reset failed for {arm_name}')
-    except Exception as e:
-        node.get_logger().error(f'Service call failed: {e}')
-    finally:
-        node.destroy_node()
-
-class GazeboMpcInterface(Node):
-    def __init__(self, arm_name, mpc_freq = 100, control_freq = 500):
-        super().__init__(f'{arm_name}_gazebo_mpc_message_convert')
+class RealMpcInterface(Node):
+    def __init__(self, arm_name, mpc_freq = 100, control_freq = 200):
+        super().__init__(f'{arm_name}_mpc_message_convert')
 
         self.mpc_freq = mpc_freq
         self.control_freq = control_freq
@@ -92,7 +37,8 @@ class GazeboMpcInterface(Node):
         self.mpc_policy = MpcFlattenedController()
 
         # Velocity Control Command Publisher
-        self.velocity_command_pub = self.create_publisher(Float64MultiArray, '/joint_velocity_controller/commands', 1)
+        # TODO 需要修改成实物的位置控制
+        self.position_command_pub = self.create_publisher(Float64MultiArray, "/rm_driver/movej_canfd_cmd", 1)
         self.control_timer = self.create_timer(1.0/self.control_freq, self.control_timer_callback)
 
         self.mpc_init()
@@ -210,7 +156,7 @@ def main(args=None):
     rclpy.init(args=args)
     arm_name = 'mobile_manipulator'
     send_mpc_reset_request(arm_name)
-    node = GazeboMpcInterface(arm_name)
+    node = RealMpcInterface(arm_name)
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()

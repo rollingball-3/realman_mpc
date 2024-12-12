@@ -42,6 +42,7 @@ class EsdfClientInterface : public rclcpp::Node{
     // Eigen::Vector3d point_;
     // Eigen::Vector3d direction_;
     //nvblox_msgs::srv::EsdfAndGradients::Response esdf_response_;
+    std::mutex service_mutex_;  // 添加互斥锁
     bool has_esdf_response_{false};
 
     

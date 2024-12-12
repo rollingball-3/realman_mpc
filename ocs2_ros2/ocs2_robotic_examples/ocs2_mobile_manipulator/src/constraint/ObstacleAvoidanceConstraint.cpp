@@ -115,36 +115,36 @@ std::pair<vector_t, std::vector<Eigen::Vector3d>> ObstacleAvoidanceConstraint::g
     //     std::cout << "Constraint value: " << constraintValue[i] << std::endl;
     // }
 
-    // 1. ¼ì²éESDFÖµµÄÁ¬ÐøÐÔ
+    // 1. ï¿½ï¿½ï¿½ESDFÖµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     for (size_t i = 0; i < esdfValue.size(); ++i) {
         if (!std::isfinite(esdfValue[i])) {
             throw std::runtime_error("ESDF value is not finite at index " + std::to_string(i));
         }
     }
 
-    // 2. ¼ì²éÌÝ¶ÈµÄÁ¬ÐøÐÔ
+    // 2. ï¿½ï¿½ï¿½ï¿½Ý¶Èµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     for (size_t i = 0; i < gradients.size(); ++i) {
         if (!gradients[i].allFinite()) {
             throw std::runtime_error("ESDF gradient is not finite at index " + std::to_string(i));
         }
         
-        // ¼ì²éÌÝ¶È´óÐ¡ÊÇ·ñºÏÀí
+        // ï¿½ï¿½ï¿½ï¿½Ý¶È´ï¿½Ð¡ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
         const double gradientNorm = gradients[i].norm();
-        if (gradientNorm > 1e3) {  // ÉèÖÃÒ»¸öºÏÀíµÄãÐÖµ
+        if (gradientNorm > 1e3) {  // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
             throw std::runtime_error("ESDF gradient norm too large: " + std::to_string(gradientNorm));
         }
     }
 
-    // 3. ¼ì²éÔ¼ÊøÖµµÄÁ¬ÐøÐÔ
+    // 3. ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     for (size_t i = 0; i < constraintValue.size(); ++i) {
         if (!std::isfinite(constraintValue[i])) {
             throw std::runtime_error("Constraint value is not finite at index " + std::to_string(i));
         }
         
-        // ¼ì²éÔ¼ÊøÖµµÄ±ä»¯ÂÊ
+        // ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½Öµï¿½Ä±ä»¯ï¿½ï¿½
         if (i > 0) {
             const double constraintChange = std::abs(constraintValue[i] - constraintValue[i-1]);
-            if (constraintChange > 1.0) {  // ÉèÖÃÒ»¸öºÏÀíµÄãÐÖµ
+            if (constraintChange > 1.0) {  // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
                 throw std::runtime_error("Constraint value changes too rapidly: " + std::to_string(constraintChange));
             }
         }
@@ -162,8 +162,8 @@ size_t ObstacleAvoidanceConstraint::getNumConstraints(scalar_t time) const{
 //linear approximation dfdq dfdu
 VectorFunctionLinearApproximation ObstacleAvoidanceConstraint::getLinearApproximation(scalar_t time, const vector_t& state,
                                                             const PreComputation& preComputation) const {   
-    std::cout << "----------------getLinearApproximation----------------" << std::endl;
-    // 1. »ñÈ¡Ô¤¼ÆËãÊý¾Ý
+    // std::cout << "----------------getLinearApproximation----------------" << std::endl;
+    // 1. ï¿½ï¿½È¡Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     const auto& preComp = cast<MobileManipulatorPreComputation>(preComputation);
     const auto& pinocchioInterface_ = preComp.getPinocchioInterface();
     mappingPtr_->setPinocchioInterface(pinocchioInterface_);
@@ -171,58 +171,58 @@ VectorFunctionLinearApproximation ObstacleAvoidanceConstraint::getLinearApproxim
     VectorFunctionLinearApproximation constraint;
     matrix_t dfdq, dfdv;
     
-    // 2. ¼ÆËãÔ¼ÊøÖµºÍÌÝ¶È
+    // 2. ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½Öµï¿½ï¿½ï¿½Ý¶ï¿½
     auto* mutableThis = const_cast<ObstacleAvoidanceConstraint*>(this);
     auto [constraintValues, gradients] = mutableThis->getEsdfConstraintValue(pinocchioInterface_, 
                                                                            pinocchioSphereInterface_, 
                                                                            esdfClientInterface_);
     constraint.f = constraintValues;
 
-    // 3. ¼ÆËãÑÅ¿É±È¾ØÕó
-    // »ñÈ¡»úÆ÷ÈËµÄÑÅ¿É±È¾ØÕó
+    // 3. ï¿½ï¿½ï¿½ï¿½ï¿½Å¿É±È¾ï¿½ï¿½ï¿½
+    // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½Å¿É±È¾ï¿½ï¿½ï¿½
     const auto& model = pinocchioInterface_.getModel();
     const auto& data = pinocchioInterface_.getData();
     
-    // ÎªÃ¿¸öÇòÌå¼ÆËãÑÅ¿É±È¾ØÕó
+    // ÎªÃ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿É±È¾ï¿½ï¿½ï¿½
     const auto& spherePositions = pinocchioSphereInterface_.computeSphereCentersInWorldFrame(pinocchioInterface_);
     dfdq.setZero(spherePositions.size(), model.nq);
     
     for (size_t i = 0; i < spherePositions.size(); ++i) {
-        // »ñÈ¡ÇòÌåËùÔÚ¹Ø½ÚµÄÑÅ¿É±È¾ØÕó
+        // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¹Ø½Úµï¿½ï¿½Å¿É±È¾ï¿½ï¿½ï¿½
         matrix_t sphereJacobian = matrix_t::Zero(6, model.nv);
         pinocchio::getJointJacobian(model, data, i+1, pinocchio::ReferenceFrame::LOCAL_WORLD_ALIGNED, sphereJacobian);
         
-        // ½«ESDFÌÝ???Óë¹Ø½ÚÑÅ¿É±ÈÏà³Ë
+        // ï¿½ï¿½ESDFï¿½ï¿½???ï¿½ï¿½Ø½ï¿½ï¿½Å¿É±ï¿½ï¿½ï¿½ï¿½
         dfdq.row(i) = gradients[i].transpose() * sphereJacobian.topRows(3);
     }
 
-    std::cout << "dfdq size: " << dfdq.rows() << " " << dfdq.cols() << std::endl;
-    for (size_t i = 0; i < dfdq.rows(); ++i) {
-        std::cout << "dfdq row " << i << ": " << dfdq.row(i).transpose() << std::endl;
-    }
+    // std::cout << "dfdq size: " << dfdq.rows() << " " << dfdq.cols() << std::endl;
+    // for (size_t i = 0; i < dfdq.rows(); ++i) {
+    //     std::cout << "dfdq row " << i << ": " << dfdq.row(i).transpose() << std::endl;
+    // }
     
-    // 4. Ó³Éäµ½OCS2×´Ì¬¿Õ¼ä
+    // 4. Ó³ï¿½äµ½OCS2×´Ì¬ï¿½Õ¼ï¿½
     dfdv.setZero(dfdq.rows(), dfdq.cols());
     std::tie(constraint.dfdx, std::ignore) = mappingPtr_->getOcs2Jacobian(state, dfdq, dfdv);
 
-    std::cout << "dfdx size: " << constraint.dfdx.rows() << " " << constraint.dfdx.cols() << std::endl;
-    for (size_t i = 0; i < constraint.dfdx.rows(); ++i) {
-        std::cout << "dfdx row " << i << ": " << constraint.dfdx.row(i).transpose() << std::endl;
-    }
+    // std::cout << "dfdx size: " << constraint.dfdx.rows() << " " << constraint.dfdx.cols() << std::endl;
+    // for (size_t i = 0; i < constraint.dfdx.rows(); ++i) {
+    //     std::cout << "dfdx row " << i << ": " << constraint.dfdx.row(i).transpose() << std::endl;
+    // }
     
-    // ¼ì²éÑÅ¿É±È¾ØÕóµÄÊýÖµÎÈ¶¨ÐÔ
+    // ï¿½ï¿½ï¿½ï¿½Å¿É±È¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½È¶ï¿½ï¿½ï¿½
     for (size_t i = 0; i < spherePositions.size(); ++i) {
         matrix_t sphereJacobian = matrix_t::Zero(6, model.nv);
         pinocchio::getJointJacobian(model, data, i+1, pinocchio::ReferenceFrame::LOCAL_WORLD_ALIGNED, sphereJacobian);
         
-        // ¼ì²éÑÅ¿É±È¾ØÕóµÄÌõ¼þÊý
+        // ï¿½ï¿½ï¿½ï¿½Å¿É±È¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Eigen::JacobiSVD<matrix_t> svd(sphereJacobian);
         double conditionNumber = svd.singularValues()(0) / 
                                svd.singularValues()(svd.singularValues().size()-1);
         
-        if (conditionNumber > 1e6) {  // ÉèÖÃÒ»¸öºÏÀíµÄãÐÖµ
-            throw std::runtime_error("Jacobian poorly conditioned: " + std::to_string(conditionNumber));
-        }
+        // if (conditionNumber > 1e6) {  // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+        //     throw std::runtime_error("Jacobian poorly conditioned: " + std::to_string(conditionNumber));
+        // }
     }
     
     return constraint;
@@ -239,7 +239,7 @@ VectorFunctionQuadraticApproximation ObstacleAvoidanceConstraint::getQuadraticAp
     constraint.dfdu = std::move(linearApprox.dfdu);
 
     const auto inputDim_ = 7;
-    // TODO: ¶þ½×µ¼ÊýÉèÖÃÎª0
+    // TODO: ï¿½ï¿½ï¿½×µï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0
     constraint.dfdxx.assign(constraint.f.size(), matrix_t::Zero(state.size(), state.size()));
     constraint.dfdux.assign(constraint.f.size(), matrix_t::Zero(inputDim_, state.size()));
     constraint.dfduu.assign(constraint.f.size(), matrix_t::Zero(inputDim_, inputDim_));

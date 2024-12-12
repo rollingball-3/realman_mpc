@@ -129,8 +129,6 @@ MobileManipulatorInterface::MobileManipulatorInterface(const std::string& taskFi
   // create pinocchio sphere interface
   pinocchioSphereInterfacePtr_.reset(new PinocchioSphereInterface(createPinocchioSphereInterface(*pinocchioInterfacePtr_, taskFile, "SphereApproximation")));
 
-  // create esdf client interface
-  esdfClientInterfacePtr_.reset(new EsdfClientInterface("esdf_client", "/nvblox_node/get_voxel_esdf_and_gradient"));
   // ManipulatorModelInfo
   manipulatorModelInfo_ = mobile_manipulator::createManipulatorModelInfo(*pinocchioInterfacePtr_, modelType, baseFrame, eeFrame);
 
@@ -187,15 +185,18 @@ MobileManipulatorInterface::MobileManipulatorInterface(const std::string& taskFi
   bool activateSelfCollision = true;
   loadData::loadPtreeValue(pt, activateSelfCollision, "selfCollision.activate", true);
   if (activateSelfCollision) {
+    
     problem_.stateSoftConstraintPtr->add(
         "selfCollision", getSelfCollisionConstraint(*pinocchioInterfacePtr_, taskFile, urdfFile, "selfCollision", usePreComputation,
                                                     libraryFolder, recompileLibraries));
   }
 
   // obstacle avoidance constraint
-  bool activateObstacleAvoidance = true;
-  loadData::loadPtreeValue(pt, activateObstacleAvoidance, "obstacleAvoidance.activate", true);
+  bool activateObstacleAvoidance = false;
+  loadData::loadPtreeValue(pt, activateObstacleAvoidance, "obstacleAvoidance.activate", false);
   if (activateObstacleAvoidance) {
+    // create esdf client interface
+    esdfClientInterfacePtr_.reset(new EsdfClientInterface("esdf_client", "/nvblox_node/get_voxel_esdf_and_gradient"));
     problem_.stateSoftConstraintPtr->add("obstacleAvoidance", getObstacleAvoidanceConstraint(*pinocchioSphereInterfacePtr_, *esdfClientInterfacePtr_, taskFile, "obstacleAvoidance",
                                                                                         usePreComputation, libraryFolder, recompileLibraries));
   }
