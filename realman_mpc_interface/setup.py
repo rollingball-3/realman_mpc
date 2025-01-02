@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'gazebo_mpc_interface = realman_mpc_interface.gazebo_mpc_interface:main',
+            'real_mpc_interface = realman_mpc_interface.real_mpc_interface:main',
         ],
     },
 )

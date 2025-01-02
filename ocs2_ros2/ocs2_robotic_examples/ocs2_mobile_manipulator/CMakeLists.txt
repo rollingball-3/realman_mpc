@@ -89,6 +89,7 @@ add_library(${PROJECT_NAME}
   src/MobileManipulatorInterface.cpp
   src/EsdfClientInterface.cpp
   src/constraint/ObstacleAvoidanceConstraint.cpp
+  src/constraint/EmptyConstraint.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME}

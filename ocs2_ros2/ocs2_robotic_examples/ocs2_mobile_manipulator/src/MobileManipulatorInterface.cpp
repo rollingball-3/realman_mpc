@@ -60,6 +60,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ocs2_mobile_manipulator/constraint/EndEffectorConstraint.h"
 #include "ocs2_mobile_manipulator/constraint/MobileManipulatorSelfCollisionConstraint.h"
 #include "ocs2_mobile_manipulator/constraint/ObstacleAvoidanceConstraint.h"
+#include "ocs2_mobile_manipulator/constraint/EmptyConstraint.h"
 #include "ocs2_mobile_manipulator/cost/QuadraticInputCost.h"
 #include "ocs2_mobile_manipulator/dynamics/DefaultManipulatorDynamics.h"
 #include "ocs2_mobile_manipulator/dynamics/FloatingArmManipulatorDynamics.h"
@@ -198,6 +199,13 @@ MobileManipulatorInterface::MobileManipulatorInterface(const std::string& taskFi
     // create esdf client interface
     esdfClientInterfacePtr_.reset(new EsdfClientInterface("esdf_client", "/nvblox_node/get_voxel_esdf_and_gradient"));
     problem_.stateSoftConstraintPtr->add("obstacleAvoidance", getObstacleAvoidanceConstraint(*pinocchioSphereInterfacePtr_, *esdfClientInterfacePtr_, taskFile, "obstacleAvoidance",
+                                                                                        usePreComputation, libraryFolder, recompileLibraries));
+  }
+
+  // empty constraint
+  if (0) {
+    std::cerr << "88888888888888888888888888888888888888888888 add empty constraint" << std::endl;
+    problem_.stateSoftConstraintPtr->add("empty", getEmptyConstraint(*pinocchioInterfacePtr_, taskFile, "empty",
                                                                                         usePreComputation, libraryFolder, recompileLibraries));
   }
   
@@ -388,6 +396,22 @@ std::unique_ptr<StateCost> MobileManipulatorInterface::getObstacleAvoidanceConst
   return std::make_unique<StateSoftConstraint>(std::move(constraint), std::move(penalty));
 
   }
+
+std::unique_ptr<StateCost> MobileManipulatorInterface::getEmptyConstraint(const PinocchioInterface& pinocchioInterface, const std::string& taskFile, const std::string& prefix,
+                                                                 bool usePreComputation, const std::string& libraryFolder, bool recompileLibraries){
+
+  std::unique_ptr<StateConstraint> constraint;
+  if (usePreComputation) {
+    constraint = std::make_unique<EmptyConstraint>(MobileManipulatorPinocchioMapping(manipulatorModelInfo_));
+  } else {
+    // 不需要CppAd版本
+  }
+  scalar_t mu = 1e-2;
+  scalar_t delta = 1e-3;
+
+  auto penalty = std::make_unique<RelaxedBarrierPenalty>(RelaxedBarrierPenalty::Config{mu, delta});
+  return std::make_unique<StateSoftConstraint>(std::move(constraint), std::move(penalty));
+}
 
 /******************************************************************************************************/
 /******************************************************************************************************/

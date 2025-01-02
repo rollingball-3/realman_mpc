@@ -19,7 +19,7 @@ std::vector<Eigen::Vector3d> generateRandomTestPositions(int num_points) {
     std::vector<Eigen::Vector3d> positions;
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(-3.0, 3.0);  // 在-2到2米范围内随机
+    std::uniform_real_distribution<> dis(-1.0, 1.0);  // 在-1.0到1.0米范围内随机
     
     for (int i = 0; i < num_points; ++i) {
         positions.push_back(Eigen::Vector3d(dis(gen), dis(gen), std::abs(dis(gen))));

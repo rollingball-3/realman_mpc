@@ -107,7 +107,9 @@ class MobileManipulatorInterface final : public RobotInterface {
   std::unique_ptr<StateCost> getObstacleAvoidanceConstraint(const PinocchioSphereInterface& pinocchioSphereInterface, EsdfClientInterface& esdfClientInterface, const std::string& taskFile,
                                                                  const std::string& prefix, bool useCaching, const std::string& libraryFolder,
                                                                  bool recompileLibraries);
-
+  std::unique_ptr<StateCost> getEmptyConstraint(const PinocchioInterface& pinocchioInterface, const std::string& taskFile, const std::string& prefix,
+                                                                 bool useCaching, const std::string& libraryFolder, bool recompileLibraries);
+  
   PinocchioSphereInterface createPinocchioSphereInterface(const PinocchioInterface& pinocchioInterface, const std::string& taskFile, const std::string& prefix);
 
   ddp::Settings ddpSettings_;
