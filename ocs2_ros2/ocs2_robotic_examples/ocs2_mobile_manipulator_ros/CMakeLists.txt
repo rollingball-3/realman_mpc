@@ -59,6 +59,15 @@ pkg_check_modules(pinocchio REQUIRED pinocchio)
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
+# 检查并移除无效的包含路径
+get_property(mobile_manipulator_includes TARGET ocs2_mobile_manipulator::ocs2_mobile_manipulator PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+foreach(include_dir ${mobile_manipulator_includes})
+  if(NOT EXISTS "${include_dir}")
+    message(WARNING "Ignoring non-existent include directory: ${include_dir}")
+    # 不要将不存在的路径添加到包含目录中
+  endif()
+endforeach()
+
 ###########
 ## Build ##
 ###########
@@ -79,6 +88,9 @@ include_directories(
   ${pinocchio_INCLUDE_DIRS}
 )
 
+# 添加 pinocchio 和 hpp-fcl 的链接路径
+link_directories(${pinocchio_LIBRARY_DIRS})
+
 # MPC node
 add_executable(mobile_manipulator_mpc_node
   src/MobileManipulatorMpcNode.cpp
@@ -87,6 +99,9 @@ ament_target_dependencies(mobile_manipulator_mpc_node
   ${dependencies}
 )
 target_compile_options(mobile_manipulator_mpc_node PUBLIC ${FLAGS})
+target_link_libraries(mobile_manipulator_mpc_node
+  ${pinocchio_LIBRARIES}
+)
 
 # DistanceVisualization node
 add_executable(mobile_manipulator_distance_visualization
@@ -96,6 +111,9 @@ ament_target_dependencies(mobile_manipulator_distance_visualization
   ${dependencies}
 )
 target_compile_options(mobile_manipulator_distance_visualization PUBLIC ${FLAGS})
+target_link_libraries(mobile_manipulator_distance_visualization
+  ${pinocchio_LIBRARIES}
+)
 
 # Dummy node
 add_executable(mobile_manipulator_dummy_mrt_node
@@ -106,6 +124,9 @@ ament_target_dependencies(mobile_manipulator_dummy_mrt_node
   ${dependencies}
 )
 target_compile_options(mobile_manipulator_dummy_mrt_node PUBLIC ${FLAGS})
+target_link_libraries(mobile_manipulator_dummy_mrt_node
+  ${pinocchio_LIBRARIES}
+)
 
 # Target node
 add_executable(mobile_manipulator_target
@@ -115,6 +136,9 @@ ament_target_dependencies(mobile_manipulator_target
   ${dependencies}
 )
 target_compile_options(mobile_manipulator_target PUBLIC ${FLAGS})
+target_link_libraries(mobile_manipulator_target
+  ${pinocchio_LIBRARIES}
+)
 
 ####################
 ## Clang tooling ###

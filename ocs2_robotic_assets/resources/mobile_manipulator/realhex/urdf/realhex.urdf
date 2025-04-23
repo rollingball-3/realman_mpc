@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 这个URDF文件结合了echo_plus底盘和rm_75_6f机械臂 -->
+<robot name="realhex">
+  <!-- 定义材质颜色 -->
+  <material name="dark_grey">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+  <material name="light_grey">
+    <color rgba="0.4 0.4 0.4 1.0"/>
+  </material>
+  <material name="black">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+  <material name="white">
+    <color rgba="0.9 0.9 0.9 1.0"/>
+  </material>
+  <material name="red">
+    <color rgba="0.8 0.0 0.0 1.0"/>
+  </material>
+  <material name="yellow">
+    <color rgba="0.8 0.8 0.0 1.0"/>
+  </material>
+
+  <!-- echo_plus底盘定义 -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.0037667 4.9269E-05 0.093978" rpy="0 0 0" />
+      <mass value="0.88922" />
+      <inertia
+        ixx="0.0011736"
+        ixy="2.0902E-18"
+        ixz="-0.00014329"
+        iyy="0.00103"
+        iyz="-1.2713E-07"
+        izz="0.0020309" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/base_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.1 0.1 0.1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="rw_link">
+    <inertial>
+      <origin xyz="6.2151E-08 0.00032083 6.3197E-06" rpy="0 0 0" />
+      <mass value="0.61178" />
+      <inertia
+        ixx="0.00067373"
+        ixy="-1.9551E-09"
+        ixz="-2.7426E-11"
+        iyy="0.0010485"
+        iyz="-4.8712E-09"
+        izz="0.00067369" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/rw_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.5 0.5 0.5 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/rw_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="rw_Joint" type="fixed">
+    <origin xyz="0 -0.13379 0.065" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="rw_link" />
+    <axis xyz="-0.0066292 0.99757 0.069317" />
+  </joint>
+
+  <link name="lw_Link">
+    <inertial>
+      <origin xyz="6.2151E-08 -0.00032083 -6.3197E-06" rpy="0 0 0" />
+      <mass value="0.61178" />
+      <inertia
+        ixx="0.00067373"
+        ixy="1.9551E-09"
+        ixz="2.7426E-11"
+        iyy="0.0010485"
+        iyz="-4.8712E-09"
+        izz="0.00067369" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/lw_Link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.5 0.5 0.5 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/lw_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="lw_Joint" type="fixed">
+    <origin xyz="0 0.13379 0.065" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="lw_Link" />
+    <axis xyz="-0.012772 0.9917 0.12797" />
+  </joint>
+
+  <!-- 添加更多的底盘组件 -->
+  <link name="frc_Link">
+    <inertial>
+      <origin xyz="-0.15567 0.5545 0.025141" rpy="0 0 0" />
+      <mass value="8.151E-13" />
+      <inertia
+        ixx="5.9301E-16"
+        ixy="-2.8582E-22"
+        ixz="9.8666E-18"
+        iyy="6.8512E-16"
+        iyz="1.1178E-22"
+        izz="8.0561E-16" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/frc_Link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.5 0.5 0.5 0.8" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/frc_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="frc_Joint" type="fixed">
+    <origin xyz="0.152 -0.10851 0.080146" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="frc_Link" />
+    <axis xyz="0 0 1" />
+  </joint>
+
+  <link name="flc_Link">
+    <inertial>
+      <origin xyz="-0.15567 0.3375 0.025141" rpy="0 0 0" />
+      <mass value="8.151E-13" />
+      <inertia
+        ixx="5.9301E-16"
+        ixy="-2.8585E-22"
+        ixz="9.8666E-18"
+        iyy="6.8512E-16"
+        iyz="1.1174E-22"
+        izz="8.0561E-16" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/flc_Link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.5 0.5 0.5 0.8" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/flc_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="flc_Joint" type="fixed">
+    <origin xyz="0.152 0.10849 0.080146" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="flc_Link" />
+    <axis xyz="0 0 1" />
+  </joint>
+
+  <!-- 添加缺失的底盘组件 -->
+  <link name="brc_Link">
+    <inertial>
+      <origin xyz="0.15233 0.558 0.025941" rpy="0 0 0" />
+      <mass value="8.151E-13" />
+      <inertia
+        ixx="5.9301E-16"
+        ixy="-2.8586E-22"
+        ixz="-9.8666E-18"
+        iyy="6.8512E-16"
+        iyz="-1.1178E-22"
+        izz="8.0561E-16" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/brc_Link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.5 0.5 0.5 0.8" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/brc_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="brc_Joint" type="fixed">
+    <origin xyz="-0.156 -0.11201 0.079346" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="brc_Link" />
+    <axis xyz="0 0 1" />
+  </joint>
+
+  <link name="blc_Link">
+    <inertial>
+      <origin xyz="0.15233 0.334 0.025941" rpy="0 0 0" />
+      <mass value="8.151E-13" />
+      <inertia
+        ixx="5.9301E-16"
+        ixy="-2.8587E-22"
+        ixz="-9.8666E-18"
+        iyy="6.8512E-16"
+        iyz="-1.1177E-22"
+        izz="8.0561E-16" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/blc_Link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.5 0.5 0.5 0.8" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/blc_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="blc_Joint" type="fixed">
+    <origin xyz="-0.156 0.11199 0.079346" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="blc_Link" />
+    <axis xyz="0 0 1" />
+  </joint>
+
+  <link name="up_link">
+    <inertial>
+      <origin xyz="0.001084 -8.4212E-06 0.137" rpy="0 0 0" />
+      <mass value="0.72097" />
+      <inertia
+        ixx="0.0063351"
+        ixy="4.5569E-08"
+        ixz="-4.7594E-10"
+        iyy="0.010136"
+        iyz="-8.6602E-10"
+        izz="0.01647" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/up_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/up_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="up_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="up_link" />
+    <axis xyz="0 0 -1" />
+  </joint>
+
+  <link name="frontback_Link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.1" />
+      <inertia
+        ixx="0.001"
+        ixy="0"
+        ixz="0"
+        iyy="0.001"
+        iyz="0"
+        izz="0.001" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/frontback_Link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.8 0.8 0.78 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/frontback_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="frontback_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="frontback_Link" />
+  </joint>
+
+  <link name="logo_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.01" />
+      <inertia
+        ixx="0.0001"
+        ixy="0"
+        ixz="0"
+        iyy="0.0001"
+        iyz="0"
+        izz="0.0001" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/logo_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+  </link>
+
+  <joint name="logo_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="logo_link" />
+  </joint>
+
+  <!-- 仅添加存在于mesh文件夹中的其他组件 -->
+  <link name="plus_Link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.01" />
+      <inertia
+        ixx="0.0001"
+        ixy="0"
+        ixz="0"
+        iyy="0.0001"
+        iyz="0"
+        izz="0.0001" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/plus_Link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.86 0.08 0.23 1" />
+      </material>
+    </visual>
+  </link>
+
+  <joint name="plus_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="plus_Link" />
+  </joint>
+
+  <link name="print_Link">
+    <inertial>
+      <origin xyz="-9.0206E-17 -9.6285E-06 0.12826" rpy="0 0 0" />
+      <mass value="0.089008" />
+      <inertia
+        ixx="0.0016125"
+        ixy="-3.5297E-08"
+        ixz="1.6401E-19"
+        iyy="0.00027424"
+        iyz="8.5282E-19"
+        izz="0.0018844" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/print_Link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0 0.5 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/print_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="print_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="print_Link" />
+  </joint>
+
+  <link name="parts_Link">
+    <inertial>
+      <origin xyz="0 0 0.1" rpy="0 0 0" />
+      <mass value="0.1" />
+      <inertia
+        ixx="0.001"
+        ixy="0"
+        ixz="0"
+        iyy="0.001"
+        iyz="0"
+        izz="0.001" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/parts_Link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/base/parts_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="parts_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="parts_Link" />
+  </joint>
+
+  <!-- RM机械臂定义 -->
+  <!-- 定义机械臂基座与底盘的连接关系 -->
+  <link name="arm_base_link">
+    <inertial>
+      <origin xyz="0.00043296 3.5291E-05 0.059942" rpy="0 0 0" />
+      <mass value="0.84105" />
+      <inertia
+        ixx="0.0017261"
+        ixy="2.5275E-06"
+        ixz="3.6769E-05"
+        iyy="0.0017099"
+        iyz="-1.68E-06"
+        izz="0.00090402" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/base_link.STL" />
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- 连接底盘与机械臂基座 -->
+  <joint name="base_to_arm_joint" type="fixed">
+    <origin xyz="0 0 0.25" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="arm_base_link" />
+  </joint>
+
+  <link name="Link1">
+    <inertial>
+      <origin xyz="-2.1376E-07 0.025186 -0.021108" rpy="0 0 0" />
+      <mass value="0.59356" />
+      <inertia
+        ixx="0.0012661"
+        ixy="-9.8019E-09"
+        ixz="-1.2951E-08"
+        iyy="0.00056135"
+        iyz="-0.00021122"
+        izz="0.0011817" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link1.STL" />
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="joint1" type="revolute">
+    <origin xyz="0 0 0.2405" rpy="-1.5708 0 0" />
+    <parent link="arm_base_link" />
+    <child link="Link1" />
+    <axis xyz="0 -1 0" />
+    <limit lower="-3.107" upper="3.107" effort="100" velocity="1" />
+  </joint>
+
+  <link name="Link2">
+    <inertial>
+      <origin xyz="4.1111E-07 0.011078 0.076129" rpy="0 0 0" />
+      <mass value="0.43285" />
+      <inertia
+        ixx="0.0012584"
+        ixy="5.6315E-09"
+        ixz="1.3348E-09"
+        iyy="0.0012225"
+        iyz="0.000279"
+        izz="0.00031747" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link2.STL" />
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="joint2" type="revolute">
+    <origin xyz="0 0 0" rpy="1.5708 0 0" />
+    <parent link="Link1" />
+    <child link="Link2" />
+    <axis xyz="0 1 0" />
+    <limit lower="-2.269" upper="2.269" effort="100" velocity="1" />
+  </joint>
+
+  <link name="Link3">
+    <inertial>
+      <origin xyz="-4.7932E-07 0.027347 -0.023544" rpy="0 0 0" />
+      <mass value="0.43132" />
+      <inertia
+        ixx="0.00079433"
+        ixy="1.0334E-08"
+        ixz="-2.329E-09"
+        iyy="0.00031507"
+        iyz="-0.00014262"
+        izz="0.00073037" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link3.STL" />
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="joint3" type="revolute">
+    <origin xyz="0 0 0.256" rpy="-1.5708 0 0" />
+    <parent link="Link2" />
+    <child link="Link3" />
+    <axis xyz="0 -1 0" />
+    <limit lower="-3.107" upper="3.107" effort="100" velocity="1" />
+  </joint>
+
+  <link name="Link4">
+    <inertial>
+      <origin xyz="5.0444E-06 0.010569 0.059593" rpy="0 0 0" />
+      <mass value="0.28963" />
+      <inertia
+        ixx="0.00063737"
+        ixy="-3.8666E-08"
+        ixz="7.0522E-08"
+        iyy="0.00061418"
+        iyz="0.00014461"
+        izz="0.00015648" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link4.STL" />
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link4.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="joint4" type="revolute">
+    <origin xyz="0 0 0" rpy="1.5708 0 0" />
+    <parent link="Link3" />
+    <child link="Link4" />
+    <axis xyz="0 1 0" />
+    <limit lower="-2.356" upper="2.356" effort="100" velocity="1" />
+  </joint>
+
+  <link name="Link5">
+    <inertial>
+      <origin xyz="1.1466E-06 0.021541 -0.018041" rpy="0 0 0" />
+      <mass value="0.23941" />
+      <inertia
+        ixx="0.00028594"
+        ixy="1.8435E-09"
+        ixz="2.6611E-09"
+        iyy="0.00011989"
+        iyz="-4.4238E-05"
+        izz="0.00026273" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link5.STL" />
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link5.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="joint5" type="revolute">
+    <origin xyz="0 0 0.21" rpy="-1.5708 0 0" />
+    <parent link="Link4" />
+    <child link="Link5" />
+    <axis xyz="0 -1 0" />
+    <limit lower="-3.107" upper="3.107" effort="100" velocity="1" />
+  </joint>
+
+  <link name="Link6">
+    <inertial>
+      <origin xyz="4.5754E-06 0.0073681 0.059382" rpy="0 0 0" />
+      <mass value="0.21879" />
+      <inertia
+        ixx="0.00035053"
+        ixy="-1.7437E-08"
+        ixz="3.1653E-08"
+        iyy="0.00033447"
+        iyz="7.824E-05"
+        izz="0.00010492" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link6.STL" />
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link6.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="joint6" type="revolute">
+    <origin xyz="0 0 0" rpy="1.5708 0 0" />
+    <parent link="Link5" />
+    <child link="Link6" />
+    <axis xyz="0 1 0" />
+    <limit lower="-2.234" upper="2.234" effort="100" velocity="1" />
+  </joint>
+
+  <link name="Link7">
+    <inertial>
+      <origin xyz="0.00032231 -0.0001782 -0.028676" rpy="0 0 0" />
+      <mass value="0.14433" />
+      <inertia
+        ixx="3.6119E-05"
+        ixy="-1.3242E-06"
+        ixz="-3.2733E-08"
+        iyy="3.4626E-05"
+        iyz="7.6694E-09"
+        izz="6.1463E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link7.STL" />
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ocs2_robotic_assets/resources/mobile_manipulator/realhex/meshes/arm/Link7.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="joint7" type="revolute">
+    <origin xyz="0 0 0.1725" rpy="0 0 0" />
+    <parent link="Link6" />
+    <child link="Link7" />
+    <axis xyz="0 0 1" />
+    <limit lower="-6.283" upper="6.283" effort="100" velocity="1" />
+  </joint>
+
+  <!-- 定义一个末端执行器坐标系 -->
+  <link name="end_effector_link"/>
+  <joint name="end_effector_joint" type="fixed">
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <parent link="Link7"/>
+    <child link="end_effector_link"/>
+  </joint>
+</robot> 
