@@ -50,6 +50,14 @@ pkg_check_modules(hpp-fcl REQUIRED hpp-fcl)
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
+# 确保 console_bridge 目录存在
+find_package(console_bridge QUIET)
+if(console_bridge_FOUND)
+  message(STATUS "Found console_bridge: ${console_bridge_DIR}")
+else()
+  message(WARNING "console_bridge not found, but might be available in the system paths")
+endif()
+
 ###########
 ## Build ##
 ###########
@@ -74,7 +82,13 @@ include_directories(
   include
   ${EIGEN3_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
+  ${pinocchio_INCLUDE_DIRS}
+  ${hpp-fcl_INCLUDE_DIRS}
 )
+
+# 添加 pinocchio 和 hpp-fcl 的链接路径
+link_directories(${pinocchio_LIBRARY_DIRS})
+link_directories(${hpp-fcl_LIBRARY_DIRS})
 
 # mobile maniulator interface library
 add_library(${PROJECT_NAME}
@@ -96,12 +110,20 @@ ament_target_dependencies(${PROJECT_NAME}
   ${dependencies}
 )
 
+# 显式添加 pinocchio 和 hpp-fcl 库到目标
+target_link_libraries(${PROJECT_NAME}
+  ${pinocchio_LIBRARIES}
+  ${hpp-fcl_LIBRARIES}
+)
+
 add_executable(test_esdf_client test/test_esdf_client.cpp)
 ament_target_dependencies(test_esdf_client
     ${dependencies}
 )
 target_link_libraries(test_esdf_client
     ${PROJECT_NAME}
+    ${pinocchio_LIBRARIES}
+    ${hpp-fcl_LIBRARIES}
 )
 
 install(
@@ -130,6 +152,20 @@ endif (cmake_clang_tools_FOUND)
 #############
 ## Install ##
 #############
+
+# 确保不导出不存在的路径
+get_target_property(current_include_dirs ${PROJECT_NAME} INTERFACE_INCLUDE_DIRECTORIES)
+set(filtered_include_dirs "")
+if(current_include_dirs)
+  foreach(include_dir ${current_include_dirs})
+    if(EXISTS "${include_dir}")
+      list(APPEND filtered_include_dirs "${include_dir}")
+    else()
+      message(WARNING "Skipping non-existent include directory: ${include_dir}")
+    endif()
+  endforeach()
+  set_target_properties(${PROJECT_NAME} PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${filtered_include_dirs}")
+endif()
 
 install(
   TARGETS ${PROJECT_NAME}
@@ -164,6 +200,8 @@ macro(add_ocs2_test APP_NAME APP_SRC)
   )
   target_link_libraries(${APP_NAME}
     ${PROJECT_NAME}
+    ${pinocchio_LIBRARIES}
+    ${hpp-fcl_LIBRARIES}
   )
 endmacro()
 
