@@ -33,7 +33,7 @@ ddp
   displayInfo                     false
   displayShortSummary             false
   checkNumericalStability         false
-  debugPrintRollout               false
+  debugPrintRollout               true
   debugCaching                    false
 
   AbsTolODE                       1e-5
@@ -77,7 +77,7 @@ mpc
   solutionTimeWindow              0.2   ; [s]
   coldStart                       false
   
-  debugPrint                      false
+  debugPrint                      true
 
   mpcDesiredFrequency             100   ; [Hz]
   mrtDesiredFrequency             400   ; [Hz]
@@ -215,10 +215,10 @@ jointPositionLimits
   activate  true
 
   ; relaxed log barrier mu
-  mu      0.01
+  mu      0.05
 
   ; relaxed log barrier delta
-  delta   1e-3
+  delta   5e-3
 }
 
 jointVelocityLimits

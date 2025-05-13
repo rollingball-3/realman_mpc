@@ -230,13 +230,13 @@ Visualization Manager:
       Value: true
     - Class: rviz_default_plugins/InteractiveMarkers
       Enable Transparency: true
-      Enabled: true
+      Enabled: false
       Interactive Markers Namespace: /simple_marker
       Name: InteractiveMarkers
       Show Axes: false
       Show Descriptions: true
       Show Visual Aids: false
-      Value: true
+      Value: false
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
       Name: MarkerArray
