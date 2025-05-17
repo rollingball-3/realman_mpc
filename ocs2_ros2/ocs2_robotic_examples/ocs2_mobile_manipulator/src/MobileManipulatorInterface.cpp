@@ -57,6 +57,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ocs2_mobile_manipulator/ManipulatorModelInfo.h"
 #include "ocs2_mobile_manipulator/MobileManipulatorPreComputation.h"
 #include "ocs2_mobile_manipulator/EsdfClientInterface.h"
+#include "ocs2_mobile_manipulator/constraint/BaseOrientationConstraint.h"
 #include "ocs2_mobile_manipulator/constraint/EndEffectorConstraint.h"
 #include "ocs2_mobile_manipulator/constraint/MobileManipulatorSelfCollisionConstraint.h"
 #include "ocs2_mobile_manipulator/constraint/ObstacleAvoidanceConstraint.h"
@@ -181,7 +182,15 @@ MobileManipulatorInterface::MobileManipulatorInterface(const std::string& taskFi
                                                                                usePreComputation, libraryFolder, recompileLibraries));
   problem_.finalSoftConstraintPtr->add("finalEndEffector", getEndEffectorConstraint(*pinocchioInterfacePtr_, taskFile, "finalEndEffector",
                                                                                     usePreComputation, libraryFolder, recompileLibraries));
-  
+  // 底盘朝向约束
+  bool activateBaseOrientation = true;
+  loadData::loadPtreeValue(pt, activateBaseOrientation, "baseOrientation.activate", true);
+  if (activateBaseOrientation) {
+    problem_.stateSoftConstraintPtr->add(
+        "baseOrientation", getBaseOrientationConstraint(*pinocchioInterfacePtr_, taskFile, "baseOrientation", usePreComputation,
+                                                        libraryFolder, recompileLibraries));
+  }
+
   // self-collision avoidance constraint
   bool activateSelfCollision = true;
   loadData::loadPtreeValue(pt, activateSelfCollision, "selfCollision.activate", true);
@@ -276,6 +285,49 @@ std::unique_ptr<StateInputCost> MobileManipulatorInterface::getQuadraticInputCos
   std::cerr << " #### =============================================================================\n";
 
   return std::make_unique<QuadraticInputCost>(std::move(R), manipulatorModelInfo_.stateDim);
+}
+
+/******************************************************************************************************/
+/******************************************************************************************************/
+/******************************************************************************************************/
+std::unique_ptr<StateCost> MobileManipulatorInterface::getBaseOrientationConstraint(
+    const PinocchioInterface& pinocchioInterface, const std::string& taskFile,
+    const std::string& prefix, bool usePreComputation, const std::string& libraryFolder,
+    bool recompileLibraries) {
+  
+  scalar_t muBaseOrientation = 1.0;
+
+  boost::property_tree::ptree pt;
+  boost::property_tree::read_info(taskFile, pt);
+  std::cerr << "\n #### " << prefix << " Settings: ";
+  std::cerr << "\n #### =============================================================================\n";
+  loadData::loadPtreeValue(pt, muBaseOrientation, prefix + ".muOrientation", true);
+  std::cerr << " #### =============================================================================\n";
+
+  if (referenceManagerPtr_ == nullptr) {
+    throw std::runtime_error("[getBaseOrientationConstraint] referenceManagerPtr_ should be set first!");
+  }
+
+  std::unique_ptr<StateConstraint> constraint;
+  if (usePreComputation) {
+    MobileManipulatorPinocchioMapping pinocchioMapping(manipulatorModelInfo_);
+    PinocchioEndEffectorKinematics eeKinematics(pinocchioInterface, pinocchioMapping, {manipulatorModelInfo_.eeFrame});
+    constraint.reset(new BaseOrientationConstraint(eeKinematics, *referenceManagerPtr_));
+  } else {
+    MobileManipulatorPinocchioMappingCppAd pinocchioMappingCppAd(manipulatorModelInfo_);
+    PinocchioEndEffectorKinematicsCppAd eeKinematics(pinocchioInterface, pinocchioMappingCppAd, 
+                                                    {manipulatorModelInfo_.eeFrame},
+                                                    manipulatorModelInfo_.stateDim, 
+                                                    manipulatorModelInfo_.inputDim,
+                                                    "base_orientation_kinematics", 
+                                                    libraryFolder, recompileLibraries, false);
+    constraint.reset(new BaseOrientationConstraint(eeKinematics, *referenceManagerPtr_));
+  }
+
+  // 使用二次惩罚函数
+  auto penalty = std::make_unique<QuadraticPenalty>(muBaseOrientation);
+  
+  return std::make_unique<StateSoftConstraint>(std::move(constraint), std::move(penalty));
 }
 
 /******************************************************************************************************/
