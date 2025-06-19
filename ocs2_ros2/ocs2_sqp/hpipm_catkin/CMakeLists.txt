@@ -38,6 +38,7 @@ set(BLASFEO_PATH ${BLASFEO_PATH} CACHE STRING "BLASFEO installation path" FORCE)
 set(BLASFEO_INCLUDE_DIR ${BLASFEO_PATH}/include CACHE STRING "Path to BLASFEO header files." FORCE)
 set(BUILD_SHARED_LIBS ON CACHE STRING "Build shared libraries" FORCE)
 set(HPIPM_TESTING OFF CACHE BOOL "Examples enabled")
+set(TARGET GENERIC CACHE STRING "Set CPU architecture target" FORCE)
 
 # Download & build source
 FetchContent_Declare(hpipmDownload
