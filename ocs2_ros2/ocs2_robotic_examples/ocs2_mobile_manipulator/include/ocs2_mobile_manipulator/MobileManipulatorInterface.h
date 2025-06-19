@@ -96,6 +96,13 @@ class MobileManipulatorInterface final : public RobotInterface {
  private:
   // TODO add new costs function define under folder constraint and cost
   std::unique_ptr<StateInputCost> getQuadraticInputCost(const std::string& taskFile);
+  // 在private部分添加
+  std::unique_ptr<StateCost> getBaseOrientationConstraint(const PinocchioInterface& pinocchioInterface, 
+                                                        const std::string& taskFile,
+                                                        const std::string& prefix, 
+                                                        bool usePreComputation, 
+                                                        const std::string& libraryFolder,
+                                                        bool recompileLibraries);
   std::unique_ptr<StateCost> getEndEffectorConstraint(const PinocchioInterface& pinocchioInterface, const std::string& taskFile,
                                                       const std::string& prefix, bool useCaching, const std::string& libraryFolder,
                                                       bool recompileLibraries);

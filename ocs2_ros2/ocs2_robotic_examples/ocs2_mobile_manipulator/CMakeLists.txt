@@ -104,6 +104,7 @@ add_library(${PROJECT_NAME}
   src/EsdfClientInterface.cpp
   src/constraint/ObstacleAvoidanceConstraint.cpp
   src/constraint/EmptyConstraint.cpp
+  src/constraint/BaseOrientationConstraint.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME}
