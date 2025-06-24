@@ -23,8 +23,8 @@ ddp
 {
   algorithm                       SLQ
 
-  nThreads                        3
-  threadPriority                  50
+  nThreads                        4
+  threadPriority                  80
 
   maxNumIterations                1
   minRelCost                      0.1
@@ -33,7 +33,7 @@ ddp
   displayInfo                     false
   displayShortSummary             false
   checkNumericalStability         false
-  debugPrintRollout               false
+  debugPrintRollout               true
   debugCaching                    false
 
   AbsTolODE                       1e-5
