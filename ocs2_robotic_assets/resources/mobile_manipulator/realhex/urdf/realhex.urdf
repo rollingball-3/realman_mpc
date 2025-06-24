@@ -22,7 +22,7 @@
   </material>
 
   <!-- echo_plus底盘定义 -->
-  <link name="base_link">
+  <link name="mobile_base">
     <inertial>
       <origin xyz="-0.0037667 4.9269E-05 0.093978" rpy="0 0 0" />
       <mass value="0.88922" />
