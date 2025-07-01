@@ -164,7 +164,7 @@ inputCost
 
       wheelBasedMobileManipulator
       {
-        scaling 1e-2
+        scaling 5e-1
 
         (0,0)  2.5  ; forward velocity
         (1,1)  2.5  ; turning velocity
@@ -319,7 +319,7 @@ jointVelocityLimits
 baseOrientation
 { 
   ; activate base orientation constraint
-  activate  true
+  activate  false
 
   ; base orientation quadratic penalty scaling
   muOrientation  0.08
