@@ -8,6 +8,7 @@ project(ocs2_mobile_manipulator_ros)
 set(dependencies
   rclcpp
   tf2_ros
+  tf2_geometry_msgs
   urdf
   kdl_parser
   robot_state_publisher
@@ -30,6 +31,7 @@ set(dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 find_package(urdf REQUIRED)
 find_package(kdl_parser REQUIRED)
 find_package(robot_state_publisher REQUIRED)

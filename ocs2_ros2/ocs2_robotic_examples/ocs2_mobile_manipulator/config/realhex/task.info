@@ -23,7 +23,7 @@ ddp
 {
   algorithm                       SLQ
 
-  nThreads                        4
+  nThreads                        6
   threadPriority                  80
 
   maxNumIterations                1
@@ -33,7 +33,7 @@ ddp
   displayInfo                     false
   displayShortSummary             false
   checkNumericalStability         false
-  debugPrintRollout               true
+  debugPrintRollout               false
   debugCaching                    false
 
   AbsTolODE                       1e-5
@@ -164,7 +164,7 @@ inputCost
 
       wheelBasedMobileManipulator
       {
-        scaling 5e-1
+        scaling 1e-1
 
         (0,0)  2.5  ; forward velocity
         (1,1)  2.5  ; turning velocity
@@ -319,8 +319,8 @@ jointVelocityLimits
 baseOrientation
 { 
   ; activate base orientation constraint
-  activate  false
+  activate  true
 
   ; base orientation quadratic penalty scaling
-  muOrientation  0.08
+  muOrientation  0.2
 } 
